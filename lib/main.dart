@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart'; // Add this dependency in your pubspec.yaml
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+import 'component.dart'; // Add this dependency in your pubspec.yaml
 
 void main() {
   runApp(MyApp());
@@ -37,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final List<Component> _draggableItems = [];
 
   @override
   void initState() {
@@ -66,7 +69,57 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       print("resetSelection");
       // Do not reset selectedElement; just hide parameters
-      showScreenParameters = true; // Show screen parameters when no element is selected
+      showScreenParameters =
+          true; // Show screen parameters when no element is selected
+    });
+  }
+
+  void addElement(String type) {
+    setState(() {
+      // Create a new component based on the dragged element type
+      Component newComponent;
+      if (type == "Text") {
+        newComponent = Component(
+            child: GestureDetector(
+          onTap: () => updateSelectedElement("Text"),
+          // Update selected element on tap
+          child: Text(
+            'This is some text!',
+            style: TextStyle(
+                color: elementColor, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ));
+      } else if (type == "Button") {
+        newComponent = Component(
+            child: GestureDetector(
+          onTap: () {
+            // setState(() {
+            //   selectedElement=;
+            // });
+            updateSelectedElement("Button");
+          },
+          // Update selected element on tap
+          child: ElevatedButton(
+            onPressed: () {},
+            child: const Text('Button', style: TextStyle(color: Colors.black)),
+          ),
+        ));
+      } else {
+        newComponent = Component(
+          child: GestureDetector(
+            onTap: () => updateSelectedElement("Icon"),
+            // Update selected element on tap
+            child: const Icon(
+              Icons.star,
+              size: 40,
+              color: Colors.white,
+            ),
+          ),
+        );
+      }
+
+      // Add the new component to the list
+      _draggableItems.add(newComponent);
     });
   }
 
@@ -87,7 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   // Interface name input
-
 
                   // Show height input field if screen parameters are visible
                   if (showScreenParameters) ...[
@@ -112,7 +164,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
-                          selectedHeight = double.tryParse(value) ?? selectedHeight;
+                          selectedHeight =
+                              double.tryParse(value) ?? selectedHeight;
                         });
                       },
                     ),
@@ -128,7 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
-                          selectedWidth = double.tryParse(value) ?? selectedWidth;
+                          selectedWidth =
+                              double.tryParse(value) ?? selectedWidth;
                         });
                       },
                     ),
@@ -140,7 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         const Text('Background Color:'),
                         const SizedBox(height: 10),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(foregroundColor: selectedColor),
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: selectedColor),
                           child: const Text('Select Color'),
                           onPressed: () {
                             // Show color picker
@@ -188,7 +243,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Properties for selected element
                   const SizedBox(height: 20),
                   if (!showScreenParameters && selectedElement != null) ...[
-                    const Text('Element Properties:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text('Element Properties:',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     // Color picker for selected element
                     Row(
@@ -196,7 +252,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         const Text('Element Color:'),
                         const SizedBox(width: 10),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(foregroundColor: elementColor),
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: elementColor),
                           child: const Text('Select Color'),
                           onPressed: () {
                             // Show color picker
@@ -252,7 +309,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (selectedElement != null) {
                   resetSelection(); // Show parameters but keep the selected element
                 }
-              }, // Reset the selected element when clicking on the main interface
+              },
+              // Reset the selected element when clicking on the main interface
               child: Center(
                 child: Container(
                   height: selectedHeight,
@@ -260,41 +318,42 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: selectedColor, // Use the selected color
                   child: DragTarget<String>(
                     onAccept: (data) {
-                      updateSelectedElement(data); // Update the dragged element
+                      addElement(
+                          data); // Add a new component when an element is dragged and dropped
+
+                      // updateSelectedElement(data); // Update the dragged element
                     },
                     builder: (context, candidateData, rejectedData) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (selectedElement == null) ...[
-                            const Icon(Icons.add_box_outlined, color: Colors.white, size: 40),
-                            const Text("Empty Screen", style: TextStyle(color: Colors.white)),
-                            const Text("Drag a layout element from the left in order to get started", style: TextStyle(color: Colors.white)),
-                          ] else ...[
-                            // Display the dragged element based on its type
-                            if (selectedElement == "Text")
-                              GestureDetector(
-                                onTap: () => updateSelectedElement("Text"), // Update selected element on tap
-                                child: Text(
-                                  'This is some text!',
-                                  style: TextStyle(color: elementColor, fontSize: 24, fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            else if (selectedElement == "Button")
-                              GestureDetector(
-                                onTap: () => updateSelectedElement("Button"), // Update selected element on tap
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('Button', style: TextStyle(color: Colors.black)),
-                                ),
-                              )
-                            else if (selectedElement == "Icon")
-                                GestureDetector(
-                                  onTap: () => updateSelectedElement("Icon"), // Update selected element on tap
-                                  child: const Icon(Icons.star, size: 40,color: Colors.white,),
-                                ),
+                      if (_draggableItems.isEmpty) {
+                        return const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_box_outlined,
+                                color: Colors.white, size: 40),
+                            Text("Empty Screen",
+                                style: TextStyle(color: Colors.white)),
+                            Text(
+                                "Drag a layout element from the left in order to get started",
+                                style: TextStyle(color: Colors.white)),
                           ],
-                        ],
+                        );
+                      }
+                      return Stack(
+                        children: _draggableItems.map((component) {
+                          return Positioned(
+                            left: 20.0,
+                            // Update this to place elements dynamically
+                            top: 20.0,
+                            // Update this to place elements dynamically
+                            child: GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    // selectedElement = component.child;
+                                  });
+                                },
+                                child: buildComponent(component)),
+                          );
+                        }).toList(),
                       );
                     },
                   ),
@@ -329,7 +388,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Center(
                           child: Text(
                             elements[index],
-                            style: const TextStyle(color: Colors.white, fontSize: 18),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 18),
                           ),
                         ),
                       ),
@@ -339,7 +399,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Center(
                         child: Text(
                           elements[index],
-                          style: const TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
                       ),
                     ),
@@ -348,7 +409,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Center(
                         child: Text(
                           elements[index],
-                          style: const TextStyle(color: Colors.white, fontSize: 18),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
                         ),
                       ),
                     ),
@@ -360,5 +422,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  Row wrapWithRow(
+      {required Widget firstComponent, required Widget secondComponent}) {
+    return Row(
+      children: [firstComponent, secondComponent],
+    );
+  }
+  Column wrapWithColumn(
+      {required Widget firstComponent, required Widget secondComponent}) {
+    return Column(
+      children: [firstComponent, secondComponent],
+    );
+  }
+  Stack wrapWithStack(
+      {required Widget firstComponent, required Widget secondComponent}) {
+    return Stack(
+      children: [firstComponent, secondComponent],
+    );
+  }
+  // Helper method to build the UI for each component
+  Widget buildComponent(Component component) {
+    return component.child;
   }
 }
