@@ -303,6 +303,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           // Main interface
+          // Main interface Expanded widget
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -310,18 +311,88 @@ class _MyHomePageState extends State<MyHomePage> {
                   resetSelection(); // Show parameters but keep the selected element
                 }
               },
-              // Reset the selected element when clicking on the main interface
               child: Center(
                 child: Container(
                   height: selectedHeight,
                   width: selectedWidth,
-                  color: selectedColor, // Use the selected color
+                  color: selectedColor,
                   child: DragTarget<String>(
                     onAccept: (data) {
-                      addElement(
-                          data); // Add a new component when an element is dragged and dropped
-
-                      // updateSelectedElement(data); // Update the dragged element
+                      if (_draggableItems.isNotEmpty) {
+                        // Show dialog to ask for layout preference
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Choose Layout'),
+                              content: const Text(
+                                  'How would you like to arrange the elements?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Wrap in Row
+                                    setState(() {
+                                      final existingComponent =
+                                          _draggableItems.last;
+                                      final newComponent =
+                                          createComponent(data);
+                                      _draggableItems
+                                          .removeLast(); // Remove the last component
+                                      _draggableItems.add(wrapWithRow(
+                                        firstComponent: existingComponent.child,
+                                        secondComponent: newComponent,
+                                      ));
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Row'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Wrap in Column
+                                    setState(() {
+                                      final existingComponent =
+                                          _draggableItems.last;
+                                      final newComponent =
+                                          createComponent(data);
+                                      _draggableItems
+                                          .removeLast(); // Remove the last component
+                                      _draggableItems.add(wrapWithColumn(
+                                        firstComponent: existingComponent.child,
+                                        secondComponent: newComponent,
+                                      ));
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Column'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Wrap in Stack
+                                    setState(() {
+                                      final existingComponent =
+                                          _draggableItems.last;
+                                      final newComponent =
+                                          createComponent(data);
+                                      _draggableItems
+                                          .removeLast(); // Remove the last component
+                                      _draggableItems.add(wrapWithStack(
+                                        firstComponent: existingComponent.child,
+                                        secondComponent: newComponent,
+                                      ));
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Stack'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        // If no existing components, just add the new one
+                        addElement(data);
+                      }
                     },
                     builder: (context, candidateData, rejectedData) {
                       if (_draggableItems.isEmpty) {
@@ -333,25 +404,25 @@ class _MyHomePageState extends State<MyHomePage> {
                             Text("Empty Screen",
                                 style: TextStyle(color: Colors.white)),
                             Text(
-                                "Drag a layout element from the left in order to get started",
-                                style: TextStyle(color: Colors.white)),
+                              "Drag a layout element from the left in order to get started",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ],
                         );
                       }
                       return Stack(
                         children: _draggableItems.map((component) {
                           return Positioned(
-                            left: 20.0,
-                            // Update this to place elements dynamically
-                            top: 20.0,
-                            // Update this to place elements dynamically
+                            left: 20.0, // Adjust for dynamic placement
+                            top: 20.0, // Adjust for dynamic placement
                             child: GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    // selectedElement = component.child;
-                                  });
-                                },
-                                child: buildComponent(component)),
+                              onTap: () {
+                                setState(() {
+                                  // Handle tap to select element
+                                });
+                              },
+                              child: buildComponent(component),
+                            ),
                           );
                         }).toList(),
                       );
@@ -424,24 +495,63 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Row wrapWithRow(
-      {required Widget firstComponent, required Widget secondComponent}) {
-    return Row(
-      children: [firstComponent, secondComponent],
+  Component createComponent(String type) {
+    Color color = elementColor; // Use the current element color
+    Widget child;
+
+    if (type == "Text") {
+      child = Text(
+        'This is some text!',
+        style:
+            TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.bold),
+      );
+    } else if (type == "Button") {
+      child = ElevatedButton(
+        onPressed: () {},
+        child: const Text('Button', style: TextStyle(color: Colors.black)),
+      );
+    } else {
+      // "Icon"
+      child = const Icon(
+        Icons.star,
+        size: 40,
+        color: Colors.white,
+      );
+    }
+
+    return Component(
+        child: GestureDetector(
+      onTap: () => updateSelectedElement(type),
+      child: child,
+    ));
+  }
+
+  Component wrapWithRow(
+      {required Widget firstComponent, required Component secondComponent}) {
+    return Component(
+      child: Row(
+        children: [firstComponent, secondComponent.child],
+      ),
     );
   }
-  Column wrapWithColumn(
-      {required Widget firstComponent, required Widget secondComponent}) {
-    return Column(
-      children: [firstComponent, secondComponent],
+
+  Component wrapWithColumn(
+      {required Widget firstComponent, required Component secondComponent}) {
+    return Component(
+        child: Column(
+      children: [firstComponent, secondComponent.child],
+    ));
+  }
+
+  Component wrapWithStack(
+      {required Widget firstComponent, required Component secondComponent}) {
+    return Component(
+      child: Stack(
+        children: [firstComponent, secondComponent.child],
+      ),
     );
   }
-  Stack wrapWithStack(
-      {required Widget firstComponent, required Widget secondComponent}) {
-    return Stack(
-      children: [firstComponent, secondComponent],
-    );
-  }
+
   // Helper method to build the UI for each component
   Widget buildComponent(Component component) {
     return component.child;
