@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 class Component {
-  final Widget child;
+  Widget child;
+  final bool isLayout;
 
-  const Component({required this.child,});
+  Component({required this.child, this.isLayout = false});
 }
