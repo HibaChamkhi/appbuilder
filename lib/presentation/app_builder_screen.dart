@@ -34,14 +34,34 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     super.initState();
     heightController.text = selectedHeight.toString();
     widthController.text = selectedWidth.toString();
+
+    // Add listeners to update the height and width when the user changes them
+    heightController.addListener(_updateSelectedHeight);
+    widthController.addListener(_updateSelectedWidth);
   }
 
   @override
   void dispose() {
+    heightController.removeListener(_updateSelectedHeight);
+    widthController.removeListener(_updateSelectedWidth);
     heightController.dispose();
     widthController.dispose();
     nameController.dispose();
     super.dispose();
+  }
+
+  // Method to update the selected height based on user input
+  void _updateSelectedHeight() {
+    setState(() {
+      selectedHeight = double.tryParse(heightController.text) ?? selectedHeight;
+    });
+  }
+
+  // Method to update the selected width based on user input
+  void _updateSelectedWidth() {
+    setState(() {
+      selectedWidth = double.tryParse(widthController.text) ?? selectedWidth;
+    });
   }
 
   void updateSelectedElement(String element) {

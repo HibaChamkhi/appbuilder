@@ -35,7 +35,6 @@ class _PreviewWidgetState extends State<PreviewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("elementColor $elementColor");
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -135,8 +134,9 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                     _hoverStates.putIfAbsent(component, () => false);
 
                     return Positioned(
-                      left: 20.0,
-                      top: 20.0,
+                      left: 20.0 * widget.draggableItems.indexOf(component),
+                      top: 20.0 * widget.draggableItems.indexOf(component),
+
                       child: MouseRegion(
                         onEnter: (_) {
                           setState(() {
@@ -158,13 +158,14 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                                   ? Border.all(color: Colors.blueAccent, width: 2)
                                   : null,
                             ),
-                            child: buildComponent(component, elementColor, onTapElement), // Pass the color and onTapElement here
+                            child: buildComponent(component, widget.elementColor, widget.onTapElement), // Pass the color and onTapElement here
                           ),
                         ),
                       ),
                     );
                   }).toList(),
                 );
+
               },
             ),
           ),
@@ -172,4 +173,32 @@ class _PreviewWidgetState extends State<PreviewWidget> {
       ),
     );
   }
+
+  // void _addElementToLayout(String data, BuildContext context, String layoutType) {
+  //   final existingComponent = draggableItems.isNotEmpty ? draggableItems.last : null;
+  //   final newComponent = createComponent(data, elementColor, onTapElement);
+  //   if (existingComponent != null) {
+  //     draggableItems.removeLast();
+  //
+  //     if (layoutType == 'Row') {
+  //       draggableItems.add(wrapWithRow(
+  //         firstComponent: existingComponent.child,
+  //         secondComponent: newComponent,
+  //       ));
+  //     } else if (layoutType == 'Column') {
+  //       draggableItems.add(wrapWithColumn(
+  //         firstComponent: existingComponent.child,
+  //         secondComponent: newComponent,
+  //       ));
+  //     } else if (layoutType == 'Stack') {
+  //       draggableItems.add(wrapWithStack(
+  //         firstComponent: existingComponent.child,
+  //         secondComponent: newComponent,
+  //       ));
+  //     }
+  //     Navigator.of(context).pop();
+  //   } else {
+  //     addElement(data);
+  //   }
+  // }
 }
