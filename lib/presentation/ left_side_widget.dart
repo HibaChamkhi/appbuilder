@@ -32,6 +32,9 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero, // Removes the border radius
+      ),
       backgroundColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),

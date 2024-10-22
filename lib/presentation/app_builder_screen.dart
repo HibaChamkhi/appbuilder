@@ -47,7 +47,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   void updateSelectedElement(String element) {
     setState(() {
       selectedElement = element;
-      elementColor = Colors.white;
       showScreenParameters = false;
     });
   }
@@ -60,7 +59,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(String type) {
     setState(() {
-      final newComponent = createComponent(type, elementColor, updateSelectedElement);
+      final newComponent = createComponent(type, Colors.green, updateSelectedElement);
       _draggableItems.add(newComponent);
     });
   }
@@ -85,6 +84,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             onElementColorChanged: (color) {
               setState(() {
                 elementColor = color;
+                print(elementColor);
               });
             },
           ),

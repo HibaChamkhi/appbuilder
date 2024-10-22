@@ -27,6 +27,7 @@ class PreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("elementColor $elementColor");
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -115,13 +116,15 @@ class PreviewWidget extends StatelessWidget {
                       top: 20.0,
                       child: GestureDetector(
                         onTap: () {
+                          // Pass the type of the element (Text, Icon, etc.)
                           onTapElement(component.child.toString()); // Assuming it represents the type
                         },
-                        child: buildComponent(component),
+                        child: buildComponent(component, elementColor, onTapElement), // Pass the color and onTapElement here
                       ),
                     );
                   }).toList(),
                 );
+
               },
             ),
           ),
@@ -129,4 +132,5 @@ class PreviewWidget extends StatelessWidget {
       ),
     );
   }
+
 }
