@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RightSideMenu extends StatefulWidget {
-  final List<String> elements;
+  final Map<Type, Widget> elements;
 
   const RightSideMenu({
     super.key,
@@ -29,17 +29,22 @@ class _RightSideMenuState extends State<RightSideMenu> {
             child: ListView.builder(
               itemCount: widget.elements.length,
               itemBuilder: (context, index) {
-                return Draggable<String>(
-                  data: widget.elements[index],
+                // Get the Type key directly
+                Type elementType = widget.elements.keys.elementAt(index);
+                Widget elementWidget = widget.elements[elementType]!;
+
+                return Draggable<Type>(
+                  data: elementType, // Use the Type as the drag data
                   feedback: Material(
                     color: Colors.transparent,
-                    child: Text(
-                      widget.elements[index],
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+                    child: Text(elementType.toString()), // Display widget during drag
                   ),
+                  onDragStarted: () {
+                    // Print the widget code when dragging starts
+                    print("Dragged widget: ${elementWidget.toString()}");
+                  },
                   child: ListTile(
-                    title: Text(widget.elements[index]),
+                    title: Text(elementType.toString()), // Display Type name
                   ),
                 );
               },
@@ -50,3 +55,4 @@ class _RightSideMenuState extends State<RightSideMenu> {
     );
   }
 }
+

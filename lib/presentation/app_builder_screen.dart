@@ -1,5 +1,6 @@
 import 'package:app_builder/presentation/preview_widget.dart';
 import 'package:app_builder/presentation/right_side_widget.dart';
+import 'package:app_builder/presentation/type_model.dart';
 import 'package:app_builder/utils/create_component.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +20,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   double selectedWidth = 393;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  List<String> elements = ["Text", "Icon", "Button"];
-  String? draggedElement;
-  String? selectedElement;
+  Map<Type, Widget>? draggedElement;
+  Map<Type, Widget>? selectedElement;
   bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
@@ -64,7 +64,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     });
   }
 
-  void updateSelectedElement(String element) {
+  void updateSelectedElement(Map<Type, Widget> element) {
     setState(() {
       selectedElement = element;
       showScreenParameters = false;
@@ -77,9 +77,9 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     });
   }
 
-  void addElement(String type) {
+  void addElement(Widget type) {
     setState(() {
-      final newComponent = createComponent(type, Colors.green, updateSelectedElement);
+      final newComponent = createComponent(type);
       _draggableItems.add(newComponent);
     });
   }
@@ -118,7 +118,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             addElement: addElement,
             elementColor: elementColor,
           ),
-          RightSideMenu(elements: elements),
+          RightSideMenu(elements: typeToWidgetMap),
         ],
       ),
     );

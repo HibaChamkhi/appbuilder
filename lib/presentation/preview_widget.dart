@@ -7,10 +7,10 @@ class PreviewWidget extends StatefulWidget {
   final double selectedHeight;
   final double selectedWidth;
   final Color selectedColor;
-  final List<Component> draggableItems;
-  final Function(String) onTapElement;
+  final List<Widget> draggableItems;
+  final Function(Map<Type, Widget>) onTapElement;
   final Function() resetSelection;
-  final Function(String) addElement;
+  final Function(Widget) addElement;
   final Color elementColor;
 
   const PreviewWidget({
@@ -45,76 +45,79 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             height: widget.selectedHeight,
             width: widget.selectedWidth,
             color: widget.selectedColor,
-            child: DragTarget<String>(
+            child: DragTarget<Widget>(
               onAccept: (data) {
+                print(data);
                 if (widget.draggableItems.isNotEmpty) {
+                  print("object");
                   var existingComponent = widget.draggableItems.last;
 
                   // Check if the existing component is a layout
-                  if (existingComponent.isLayout) {
-                    final newComponent = createComponent(data, widget.elementColor, widget.onTapElement);
-                    existingComponent = wrapWithParent(
-                      existingComponent: existingComponent.child,
-                      newComponent: newComponent,
-                    );
-
-                    setState(() {
-                      widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
-                    });
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Choose Layout'),
-                          content: const Text('How would you like to arrange the elements?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                final newComponent = createComponent(data, widget.elementColor, widget.onTapElement);
-                                widget.draggableItems.removeLast();
-                                widget.draggableItems.add(wrapWithRow(
-                                  firstComponent: existingComponent.child,
-                                  secondComponent: newComponent,
-                                ));
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Row'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                final newComponent = createComponent(data, widget.elementColor, widget.onTapElement);
-                                widget.draggableItems.removeLast();
-                                widget.draggableItems.add(wrapWithColumn(
-                                  firstComponent: existingComponent.child,
-                                  secondComponent: newComponent,
-                                ));
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Column'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                final newComponent = createComponent(data, widget.elementColor, widget.onTapElement);
-                                widget.draggableItems.removeLast();
-                                widget.draggableItems.add(wrapWithStack(
-                                  firstComponent: existingComponent.child,
-                                  secondComponent: newComponent,
-                                ));
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Stack'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
+                  // if (existingComponent.isLayout) {
+                  //   final newComponent = createComponent(data);
+                  //   existingComponent = wrapWithParent(
+                  //     existingComponent: existingComponent.child,
+                  //     newComponent: newComponent,
+                  //   );
+                  //
+                  //   setState(() {
+                  //     widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
+                  //   });
+                  // } else {
+                  //   showDialog(
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return AlertDialog(
+                  //         title: const Text('Choose Layout'),
+                  //         content: const Text('How would you like to arrange the elements?'),
+                  //         actions: [
+                  //           TextButton(
+                  //             onPressed: () {
+                  //               final newComponent = createComponent(data,);
+                  //               widget.draggableItems.removeLast();
+                  //               widget.draggableItems.add(wrapWithRow(
+                  //                 firstComponent: existingComponent,
+                  //                 secondComponent: newComponent,
+                  //               ));
+                  //               Navigator.of(context).pop();
+                  //             },
+                  //             child: const Text('Row'),
+                  //           ),
+                  //           TextButton(
+                  //             onPressed: () {
+                  //               final newComponent = createComponent(data);
+                  //               widget.draggableItems.removeLast();
+                  //               widget.draggableItems.add(wrapWithColumn(
+                  //                 firstComponent: existingComponent,
+                  //                 secondComponent: newComponent,
+                  //               ));
+                  //               Navigator.of(context).pop();
+                  //             },
+                  //             child: const Text('Column'),
+                  //           ),
+                  //           TextButton(
+                  //             onPressed: () {
+                  //               final newComponent = createComponent(data);
+                  //               widget.draggableItems.removeLast();
+                  //               widget.draggableItems.add(wrapWithStack(
+                  //                 firstComponent: existingComponent.child,
+                  //                 secondComponent: newComponent,
+                  //               ));
+                  //               Navigator.of(context).pop();
+                  //             },
+                  //             child: const Text('Stack'),
+                  //           ),
+                  //         ],
+                  //       );
+                  //     },
+                  //   );
+                  // }
                 } else {
                   widget.addElement(data);
                 }
               },
               builder: (context, candidateData, rejectedData) {
+                print("widget.draggableItems ${widget.draggableItems}");
                 if (widget.draggableItems.isEmpty) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -131,26 +134,26 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                 return Stack(
                   children: widget.draggableItems.map((component) {
                     // Initialize the hover state if it doesn't exist.
-                    _hoverStates.putIfAbsent(component, () => false);
+                    // _hoverStates.putIfAbsent(component, () => false);
 
                     return Positioned(
                       left: 20.0 * widget.draggableItems.indexOf(component),
                       top: 20.0 * widget.draggableItems.indexOf(component),
 
-                      child: MouseRegion(
-                        onEnter: (_) {
-                          setState(() {
-                            _hoverStates[component] = true;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            _hoverStates[component] = false;
-                          });
-                        },
+                      // child: MouseRegion(
+                      //   onEnter: (_) {
+                      //     setState(() {
+                      //       _hoverStates[component] = true;
+                      //     });
+                      //   },
+                      //   onExit: (_) {
+                      //     setState(() {
+                      //       _hoverStates[component] = false;
+                      //     });
+                      //   },
                         child: GestureDetector(
                           onTap: () {
-                            widget.onTapElement(component.child.toString());
+                            // widget.onTapElement(component);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -158,14 +161,13 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                                   ? Border.all(color: Colors.blueAccent, width: 2)
                                   : null,
                             ),
-                            child: buildComponent(component, widget.elementColor, widget.onTapElement), // Pass the color and onTapElement here
+                            child: buildComponent(component), // Pass the color and onTapElement here
                           ),
                         ),
-                      ),
+                      //        ),
                     );
                   }).toList(),
                 );
-
               },
             ),
           ),
@@ -174,31 +176,5 @@ class _PreviewWidgetState extends State<PreviewWidget> {
     );
   }
 
-  // void _addElementToLayout(String data, BuildContext context, String layoutType) {
-  //   final existingComponent = draggableItems.isNotEmpty ? draggableItems.last : null;
-  //   final newComponent = createComponent(data, elementColor, onTapElement);
-  //   if (existingComponent != null) {
-  //     draggableItems.removeLast();
-  //
-  //     if (layoutType == 'Row') {
-  //       draggableItems.add(wrapWithRow(
-  //         firstComponent: existingComponent.child,
-  //         secondComponent: newComponent,
-  //       ));
-  //     } else if (layoutType == 'Column') {
-  //       draggableItems.add(wrapWithColumn(
-  //         firstComponent: existingComponent.child,
-  //         secondComponent: newComponent,
-  //       ));
-  //     } else if (layoutType == 'Stack') {
-  //       draggableItems.add(wrapWithStack(
-  //         firstComponent: existingComponent.child,
-  //         secondComponent: newComponent,
-  //       ));
-  //     }
-  //     Navigator.of(context).pop();
-  //   } else {
-  //     addElement(data);
-  //   }
-  // }
+
 }

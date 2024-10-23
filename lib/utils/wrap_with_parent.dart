@@ -58,6 +58,10 @@ Component wrapWithParent({
       ),
     );
   }
-  return Component(child: existingComponent);
+  return
+    Component(
+      child:existingComponent
+    )
+    ;
 }
 

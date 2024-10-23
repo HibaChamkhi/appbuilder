@@ -8,7 +8,7 @@ class LeftSideMenu extends StatefulWidget {
   final TextEditingController nameController;
   final Color selectedColor;
   final bool showScreenParameters;
-  final String? selectedElement;
+  final Map<Type, Widget>? selectedElement;
   final Function(Color) onColorChanged;
   final Function(Color) onElementColorChanged;
 
