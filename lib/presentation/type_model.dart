@@ -8,11 +8,13 @@ class SelectedElement {
   final bool isLayout;
   Map<String, dynamic>? params;
 
+
   SelectedElement({
     required this.type,
     required this.widget,
     this.isLayout = false,
-  }) : id = Uuid().v4(); // Generate a UUID for each instance
+    String? id, // Add id as an optional named parameter
+  }) : id = id ?? Uuid().v4(); // Use the provided id or generate a new one
 
   // Convert a SelectedElement into a Map.
   Map<String, dynamic> toJson() {
@@ -20,7 +22,6 @@ class SelectedElement {
       'id': id,
       'type': type.toString(), // Convert Type to String
       'isLayout': isLayout,
-      // Note: You need to handle the widget serialization differently.
     };
   }
 

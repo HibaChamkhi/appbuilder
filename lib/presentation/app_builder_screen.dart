@@ -21,7 +21,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
   Map<Type, Widget>? draggedElement;
-  bool? selectedElement;
+  bool? theSelectedElement;
   bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
@@ -72,12 +72,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
-      final newComponent = createComponent(selectedElement, (selectedElement) {
-        setState(() {
-          selectedElement = selectedElement;
-          print(selectedElement);
-        });
-      });
+      final newComponent = createComponent(selectedElement);
       _draggableItems.add(newComponent);
     });
   }
@@ -102,7 +97,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             widthController: widthController,
             nameController: nameController,
             selectedColor: selectedColor,
-            selectedElement: selectedElement,
+            selectedElement: theSelectedElement,
             onColorChanged: (color) {
               setState(() {
                 selectedColor = color;
@@ -119,8 +114,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             elementColor: elementColor,
             tapElement: (SelectedElement element) {
               setState(() {
-                print("selectedElement $selectedElement");
-
+                print("theSelectedElement $theSelectedElement");
                 // selectedElement = element;
               });
             },

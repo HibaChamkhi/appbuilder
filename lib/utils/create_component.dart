@@ -11,9 +11,8 @@ Widget wrapWithGestureDetector(Widget widget, Function onTap) {
   );
 }
 
-SelectedElement createComponent(SelectedElement selectedElement, Function(SelectedElement) selectElement) {
+SelectedElement createComponent(SelectedElement selectedElement,) {
   Widget wrappedWidget = wrapWithGestureDetector(selectedElement.widget, () {
-    selectElement(selectedElement);
     print("Tapped on: ${selectedElement.id}");
   });
 

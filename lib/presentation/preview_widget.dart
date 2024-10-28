@@ -51,13 +51,12 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                       var existingComponent = widget.draggableItems.last;
 
                       if (existingComponent.isLayout == true) {
-                        final newComponent = createComponent(data, widget.tapElement);
-                        existingComponent = wrapWithParent(
-                          existingComponent: existingComponent,
-                          newComponent: newComponent,
-                        );
-
                         setState(() {
+                          final newComponent = createComponent(data,);
+                          existingComponent = wrapWithParent(
+                            existingComponent: existingComponent,
+                            newComponent: newComponent,
+                          );
                           widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
                         });
                       } else {
@@ -65,6 +64,8 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                       }
                     } else {
                       widget.addElement(data);
+                      print(" widget.tapElement ${widget.tapElement}");
+
                     }
                   },
                   builder: (context, candidateData, rejectedData) {
@@ -75,7 +76,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                           Icon(Icons.add_box_outlined, color: Colors.white, size: 40),
                           Text("Empty Screen", style: TextStyle(color: Colors.white)),
                           Text(
-                            "Drag a layout element from the left to get started",
+                            "Drag a layout element from the left to get started" ,
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
@@ -113,7 +114,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData, widget.tapElement);
+                final newComponent = createComponent(newData);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithRow(
                   firstComponent: existingComponent,
@@ -125,7 +126,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData, widget.tapElement);
+                final newComponent = createComponent(newData);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithColumn(
                   firstComponent: existingComponent,
@@ -137,7 +138,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData, widget.tapElement);
+                final newComponent = createComponent(newData,);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithStack(
                   firstComponent: existingComponent,
