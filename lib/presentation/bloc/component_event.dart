@@ -17,3 +17,12 @@ class DeselectElementEvent extends ElementEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AddDraggableItemEvent extends ElementEvent {
+  final SelectedElement selectedElement;
+
+  const AddDraggableItemEvent(this.selectedElement);
+
+  @override
+  List<Object?> get props => [selectedElement];
+}
