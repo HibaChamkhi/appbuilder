@@ -75,7 +75,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
       final newComponent = createComponent(selectedElement, (selectedElement) {
         setState(() {
           selectedElement = selectedElement;
-          print(selectedElement);
+          print('addElement:: ${selectedElement.widget}');
         });
       });
       _draggableItems.add(newComponent);
@@ -121,7 +121,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             tapElement: (SelectedElement element) {
               setState(() {
                 selectedElement = element;
-                print(selectedElement);
               });
             },
           ),
