@@ -1,3 +1,4 @@
+import 'package:app_builder/presentation/pages/app_builder_page.dart';
 import 'package:flutter/material.dart';
 
 import 'presentation/app_builder_screen.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: AppBuilderScreen(),
+        body: AppBuilderPage(),
       ),
     );
   }

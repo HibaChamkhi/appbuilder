@@ -1,16 +1,15 @@
+import 'package:app_builder/presentation/bloc/component_bloc.dart';
 import 'package:app_builder/presentation/preview_widget.dart';
 import 'package:app_builder/presentation/right_side_widget.dart';
 import 'package:app_builder/presentation/type_model.dart';
 import 'package:app_builder/utils/create_component.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import ' left_side_widget.dart';
-import 'component.dart'; // Component class from your existing file
 
 class AppBuilderScreen extends StatefulWidget {
-  const AppBuilderScreen({super.key});
-
+  const AppBuilderScreen({super.key, required this.state});
+  final ComponentState state ;
   @override
   _AppBuilderScreenState createState() => _AppBuilderScreenState();
 }
@@ -20,14 +19,12 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   double selectedWidth = 393;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  Map<Type, Widget>? draggedElement;
   bool? theSelectedElement;
   bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final List<SelectedElement> _draggableItems = [];
 
   @override
   void initState() {
@@ -72,17 +69,16 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
-      final newComponent = createComponent(selectedElement);
-      _draggableItems.add(newComponent);
+      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(selectedElement));
     });
   }
 
   void updateSelectedElement(SelectedElement updatedElement) {
     setState(() {
-      final index = _draggableItems
-          .indexWhere((element) => element.id == updatedElement.id);
+      final index = widget.state.draggableItems
+          ?.indexWhere((element) => element.id == updatedElement.id);
       if (index != -1) {
-        _draggableItems[index] = updatedElement;
+        widget.state.draggableItems?[index!] = updatedElement;
       }
     });
   }
@@ -108,7 +104,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             selectedHeight: selectedHeight,
             selectedWidth: selectedWidth,
             selectedColor: selectedColor,
-            draggableItems: _draggableItems,
+            draggableItems: widget.state.draggableItems ?? [],
             resetSelection: resetSelection,
             addElement: addElement,
             elementColor: elementColor,
