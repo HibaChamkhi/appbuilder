@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import ' left_side_widget.dart';
 import 'component.dart'; // Component class from your existing file
 
-
 class AppBuilderScreen extends StatefulWidget {
   const AppBuilderScreen({super.key});
 
@@ -65,9 +64,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     });
   }
 
-
-
-
   void resetSelection() {
     setState(() {
       showScreenParameters = true;
@@ -76,20 +72,25 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
-      final newComponent = createComponent(selectedElement);
+      final newComponent = createComponent(selectedElement, (selectedElement) {
+        setState(() {
+          selectedElement = selectedElement;
+          print(selectedElement);
+        });
+      });
       _draggableItems.add(newComponent);
     });
   }
 
   void updateSelectedElement(SelectedElement updatedElement) {
     setState(() {
-      final index = _draggableItems.indexWhere((element) => element.id == updatedElement.id);
+      final index = _draggableItems
+          .indexWhere((element) => element.id == updatedElement.id);
       if (index != -1) {
         _draggableItems[index] = updatedElement;
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

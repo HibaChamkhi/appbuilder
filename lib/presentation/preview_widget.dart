@@ -51,7 +51,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                       var existingComponent = widget.draggableItems.last;
 
                       if (existingComponent.isLayout == true) {
-                        final newComponent = createComponent(data);
+                        final newComponent = createComponent(data, widget.tapElement);
                         existingComponent = wrapWithParent(
                           existingComponent: existingComponent,
                           newComponent: newComponent,
@@ -113,7 +113,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData);
+                final newComponent = createComponent(newData, widget.tapElement);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithRow(
                   firstComponent: existingComponent,
@@ -125,7 +125,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData);
+                final newComponent = createComponent(newData, widget.tapElement);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithColumn(
                   firstComponent: existingComponent,
@@ -137,7 +137,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData);
+                final newComponent = createComponent(newData, widget.tapElement);
                 widget.draggableItems.removeLast();
                 widget.draggableItems.add(wrapWithStack(
                   firstComponent: existingComponent,
