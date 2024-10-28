@@ -1,8 +1,10 @@
 import 'package:app_builder/presentation/type_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'component_state.dart';
+
 part 'component_event.dart';
 
 class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
@@ -15,10 +17,14 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
     });
 
     on<AddDraggableItemEvent>((event, emit) {
-      final updatedDraggableItems = List<SelectedElement>.from(state.draggableItems ?? [])
-        ..add(event.selectedElement);
+      final updatedDraggableItems =
+          List<SelectedElement>.from(state.draggableItems ?? [])
+            ..add(event.selectedElement);
 
-      emit(state.copyWith(draggableItems: updatedDraggableItems, selectedElement: event.selectedElement));
+      emit(state.copyWith(
+          draggableItems: updatedDraggableItems,
+          selectedElement: event.selectedElement));
+      print("state.selectedElement?.id ${state.selectedElement?.id}");
     });
 
     on<EditDraggableItemEvent>((event, emit) {
@@ -31,5 +37,29 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
       emit(state.copyWith(draggableItems: updatedDraggableItems));
     });
+
+    // Utility functions
+    Widget wrapWithGestureDetector(Widget widget, Function onTap) {
+      return GestureDetector(
+        onTap: () => onTap(),
+        child: widget,
+      );
+    }
+
+    SelectedElement createComponent(
+      SelectedElement selectedElement,
+    ) {
+      Widget wrappedWidget =
+          wrapWithGestureDetector(selectedElement.widget, () {
+        add(SelectElementEvent(selectedElement));
+        print("Tapped on: ${selectedElement.id}");
+      });
+
+      return SelectedElement(
+        type: selectedElement.type,
+        widget: wrappedWidget,
+        isLayout: selectedElement.isLayout,
+      );
+    }
   }
 }

@@ -68,7 +68,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
-      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(selectedElement));
+      SelectedElement newElement = createComponent(selectedElement);
+      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(newElement));
     });
   }
 
@@ -109,7 +110,10 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             elementColor: elementColor,
             tapElement: (SelectedElement element) {
               setState(() {
-                // selectedElement = element;
+                print("state ${widget.state.selectedElement}");
+                BlocProvider.of<ComponentBloc>(context).add( SelectElementEvent(element));
+                print("state2 ${widget.state.selectedElement}");
+
               });
             },
           ),

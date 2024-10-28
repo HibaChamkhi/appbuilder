@@ -3,25 +3,6 @@
 import 'package:flutter/material.dart';
 import '../presentation/type_model.dart';
 
-// Utility functions
-Widget wrapWithGestureDetector(Widget widget, Function onTap) {
-  return GestureDetector(
-    onTap: () => onTap(),
-    child: widget,
-  );
-}
-
-SelectedElement createComponent(SelectedElement selectedElement,) {
-  Widget wrappedWidget = wrapWithGestureDetector(selectedElement.widget, () {
-    print("Tapped on: ${selectedElement.id}");
-  });
-
-  return SelectedElement(
-    type: selectedElement.type,
-    widget: wrappedWidget,
-    isLayout: selectedElement.isLayout,
-  );
-}
 
 SelectedElement updateComponent(SelectedElement selectedElement, {Widget? newWidget}) {
   Widget updatedWidget = newWidget ?? selectedElement.widget;
