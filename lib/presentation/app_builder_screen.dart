@@ -2,6 +2,7 @@ import 'package:app_builder/presentation/preview_widget.dart';
 import 'package:app_builder/presentation/right_side_widget.dart';
 import 'package:app_builder/presentation/type_model.dart';
 import 'package:app_builder/utils/create_component.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import ' left_side_widget.dart';
@@ -21,13 +22,13 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
   Map<Type, Widget>? draggedElement;
-  Map<Type, Widget>? selectedElement;
+  SelectedElement? selectedElement;
   bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final List<Component> _draggableItems = [];
+  final List<SelectedElement> _draggableItems = [];
 
   @override
   void initState() {
@@ -64,12 +65,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     });
   }
 
-  void updateSelectedElement(Map<Type, Widget> element) {
-    setState(() {
-      selectedElement = element;
-      showScreenParameters = false;
-    });
-  }
+
+
 
   void resetSelection() {
     setState(() {
@@ -77,12 +74,22 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     });
   }
 
-  void addElement(Widget type) {
+  void addElement(SelectedElement selectedElement) {
     setState(() {
-      final newComponent = createComponent(type);
+      final newComponent = createComponent(selectedElement);
       _draggableItems.add(newComponent);
     });
   }
+
+  void updateSelectedElement(SelectedElement updatedElement) {
+    setState(() {
+      final index = _draggableItems.indexWhere((element) => element.id == updatedElement.id);
+      if (index != -1) {
+        _draggableItems[index] = updatedElement;
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,22 +108,21 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
                 selectedColor = color;
               });
             },
-            onElementColorChanged: (color) {
-              setState(() {
-                elementColor = color;
-                print(elementColor);
-              });
-            },
           ),
           PreviewWidget(
             selectedHeight: selectedHeight,
             selectedWidth: selectedWidth,
             selectedColor: selectedColor,
             draggableItems: _draggableItems,
-            onTapElement: updateSelectedElement,
             resetSelection: resetSelection,
             addElement: addElement,
             elementColor: elementColor,
+            tapElement: (SelectedElement element) {
+              setState(() {
+                selectedElement = element;
+                print(selectedElement);
+              });
+            },
           ),
           RightSideMenu(elements: typeToWidgetMap),
         ],

@@ -1,67 +1,77 @@
 import 'package:flutter/material.dart';
 
 import '../presentation/component.dart';
+import '../presentation/type_model.dart';
 
-// Wraps two components in a Row layout.
-Component wrapWithRow({required Widget firstComponent, required Component secondComponent}) {
-  return Component(
-    isLayout: true,
-    child: Row(
-      children: [firstComponent, secondComponent.child],
-    ),
-  );
+SelectedElement wrapWithRow(
+    {required SelectedElement firstComponent,
+    required SelectedElement secondComponent}) {
+  return SelectedElement(
+      type: Row,
+      widget: Row(
+        children: [firstComponent.widget, secondComponent.widget],
+      ),
+      isLayout: true);
 }
 
-// Wraps two components in a Column layout.
-Component wrapWithColumn({required Widget firstComponent, required Component secondComponent}) {
-  return Component(
-    isLayout: true,
-    child: Column(
-      children: [firstComponent, secondComponent.child],
-    ),
-  );
+SelectedElement wrapWithColumn(
+    {required SelectedElement firstComponent,
+    required SelectedElement secondComponent}) {
+  return SelectedElement(
+      type: Column,
+      widget: Column(
+        children: [firstComponent.widget, secondComponent.widget],
+      ),
+      isLayout: true);
 }
 
-// Wraps two components in a Stack layout.
-Component wrapWithStack({required Widget firstComponent, required Component secondComponent}) {
-  return Component(
-    isLayout: true,
-    child: Stack(
-      children: [firstComponent, secondComponent.child],
-    ),
-  );
+SelectedElement wrapWithStack(
+    {required SelectedElement firstComponent,
+    required SelectedElement secondComponent}) {
+  return SelectedElement(
+      type: Stack,
+      widget: Stack(
+        children: [firstComponent.widget, secondComponent.widget],
+      ),
+      isLayout: true);
 }
 
-Component wrapWithParent({
-  required Widget existingComponent,
-  required Component newComponent,
+SelectedElement wrapWithParent({
+  required SelectedElement existingComponent,
+  required SelectedElement newComponent,
 }) {
-  if (existingComponent is Column) {
-    return Component(
-      isLayout: true,
-      child: Column(
-        children: [...existingComponent.children, newComponent.child],
+  if (existingComponent.widget is Column) {
+    return SelectedElement(
+      type: Column,
+      widget: Column(
+        children: [
+          ...(existingComponent.widget as Column).children,
+          newComponent.widget
+        ],
       ),
     );
-  } else if (existingComponent is Row) {
-    return Component(
-      isLayout: true,
-      child: Row(
-        children: [...existingComponent.children, newComponent.child],
+  } else if (existingComponent.widget is Row) {
+    return SelectedElement(
+      type: Row,
+      widget: Row(
+        children: [
+          ...(existingComponent.widget as Row).children,
+          newComponent.widget
+        ],
       ),
     );
-  } else if (existingComponent is Stack) {
-    return Component(
-      isLayout: true,
-      child: Stack(
-        children: [...existingComponent.children, newComponent.child],
+  } else if (existingComponent.widget is Stack) {
+    return SelectedElement(
+      type: Stack,
+      widget: Stack(
+        children: [
+          ...(existingComponent.widget as Stack).children,
+          newComponent.widget
+        ],
       ),
     );
   }
-  return
-    Component(
-      child:existingComponent
-    )
-    ;
-}
 
+  // Return the existing component unchanged if it doesn't match the above types
+  return existingComponent;
+}

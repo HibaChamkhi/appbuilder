@@ -1,16 +1,21 @@
+import 'dart:convert';
+
+import 'package:app_builder/presentation/type_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import '../utils/create_component.dart';
 
+
+// LeftSideMenu Code
 class LeftSideMenu extends StatefulWidget {
   final TextEditingController heightController;
   final TextEditingController widthController;
   final TextEditingController nameController;
   final Color selectedColor;
   final bool showScreenParameters;
-  final Map<Type, Widget>? selectedElement;
+  final SelectedElement? selectedElement;
   final Function(Color) onColorChanged;
-  final Function(Color) onElementColorChanged;
 
   const LeftSideMenu({
     super.key,
@@ -21,7 +26,6 @@ class LeftSideMenu extends StatefulWidget {
     required this.showScreenParameters,
     required this.selectedElement,
     required this.onColorChanged,
-    required this.onElementColorChanged,
   });
 
   @override
@@ -33,14 +37,14 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
   Widget build(BuildContext context) {
     return Drawer(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero, // Removes the border radius
+        borderRadius: BorderRadius.zero,
       ),
       backgroundColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (widget.showScreenParameters) ...[
+            if (widget.selectedElement == null) ...[
               TextField(
                 controller: widget.nameController,
                 decoration: const InputDecoration(
@@ -71,17 +75,13 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
                 onColorChanged: widget.onColorChanged,
               ),
             ] else ...[
-              const Text("Pick element color:"),
-              BlockPicker(
-                pickerColor: widget.selectedColor,
-                onColorChanged: widget.onElementColorChanged,
+              Text("Selected Element Type: ${widget.selectedElement!.type}"),
+              ElevatedButton(
+                onPressed: () {
+                  print("Tapped on selected element parameter!");
+                },
+                child: const Text("Update Element"),
               ),
-              const SizedBox(height: 20),
-              if (widget.selectedElement != null)
-                Text(
-                  "Selected: ${widget.selectedElement}",
-                  style: const TextStyle(color: Colors.black),
-                ),
             ],
           ],
         ),

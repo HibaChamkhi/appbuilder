@@ -1,3 +1,4 @@
+import 'package:app_builder/presentation/type_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,9 +33,8 @@ class _RightSideMenuState extends State<RightSideMenu> {
                 // Get the Type key directly
                 Type elementType = widget.elements.keys.elementAt(index);
                 Widget elementWidget = widget.elements[elementType]!;
-
-                return Draggable<Type>(
-                  data: elementType, // Use the Type as the drag data
+                return Draggable<SelectedElement>(
+                  data:SelectedElement(type: elementType, widget: elementWidget) , // Use the Type as the drag data
                   feedback: Material(
                     color: Colors.transparent,
                     child: Text(elementType.toString()), // Display widget during drag
@@ -42,6 +42,10 @@ class _RightSideMenuState extends State<RightSideMenu> {
                   onDragStarted: () {
                     // Print the widget code when dragging starts
                     print("Dragged widget: ${elementWidget.toString()}");
+                  },
+                  onDragEnd: (details) {
+                    // Drag ended, handle any necessary logic here
+                    print("Drag ended: ${elementWidget.toString()}");
                   },
                   child: ListTile(
                     title: Text(elementType.toString()), // Display Type name
@@ -55,4 +59,3 @@ class _RightSideMenuState extends State<RightSideMenu> {
     );
   }
 }
-
