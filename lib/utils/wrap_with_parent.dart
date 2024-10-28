@@ -1,63 +1,88 @@
-import 'package:flutter/material.dart';
+// Helper functions to wrap components into layouts
+import 'package:flutter/cupertino.dart';
 
 import '../presentation/component.dart';
 
-// Wraps two components in a Row layout.
-Component wrapWithRow({required Widget firstComponent, required Component secondComponent}) {
+Component wrapWithRow({
+  required Component firstComponent,
+  required Component secondComponent,
+}) {
   return Component(
     isLayout: true,
+    type: 'layout',
+    styleModel: firstComponent.styleModel,
     child: Row(
-      children: [firstComponent, secondComponent.child],
+      children: [firstComponent.child!, secondComponent.child!],
     ),
-  );
+  )
+    ..childCode = "Row(children: [${firstComponent.childCode}, ${secondComponent.childCode}])";
 }
 
-// Wraps two components in a Column layout.
-Component wrapWithColumn({required Widget firstComponent, required Component secondComponent}) {
+Component wrapWithColumn({
+  required Component firstComponent,
+  required Component secondComponent,
+}) {
   return Component(
     isLayout: true,
+    type: 'layout',
+    styleModel: firstComponent.styleModel,
     child: Column(
-      children: [firstComponent, secondComponent.child],
+      children: [firstComponent.child!, secondComponent.child!],
     ),
-  );
+  )
+    ..childCode = "Column(children: [${firstComponent.childCode}, ${secondComponent.childCode}])";
 }
 
-// Wraps two components in a Stack layout.
-Component wrapWithStack({required Widget firstComponent, required Component secondComponent}) {
+Component wrapWithStack({
+  required Component firstComponent,
+  required Component secondComponent,
+}) {
   return Component(
     isLayout: true,
+    type: 'layout',
+    styleModel: firstComponent.styleModel,
     child: Stack(
-      children: [firstComponent, secondComponent.child],
+      children: [firstComponent.child!, secondComponent.child!],
     ),
-  );
+  )
+    ..childCode = "Stack(children: [${firstComponent.childCode}, ${secondComponent.childCode}])";
 }
 
+// This function adds a new component inside an existing layout component (Row, Column, or Stack).
 Component wrapWithParent({
-  required Widget existingComponent,
+  required Component existingComponent,
   required Component newComponent,
 }) {
-  if (existingComponent is Column) {
+  if (existingComponent.child is Column) {
     return Component(
       isLayout: true,
+      type: 'layout',
+      styleModel: existingComponent.styleModel,
       child: Column(
-        children: [...existingComponent.children, newComponent.child],
+        children: [...(existingComponent.child as Column).children, newComponent.child!],
       ),
-    );
-  } else if (existingComponent is Row) {
+    )
+      ..childCode = "Column(children: [...${existingComponent.childCode}.children, ${newComponent.childCode}])";
+  } else if (existingComponent.child is Row) {
     return Component(
       isLayout: true,
+      type: 'layout',
+      styleModel: existingComponent.styleModel,
       child: Row(
-        children: [...existingComponent.children, newComponent.child],
+        children: [...(existingComponent.child as Row).children, newComponent.child!],
       ),
-    );
-  } else if (existingComponent is Stack) {
+    )
+      ..childCode = "Row(children: [...${existingComponent.childCode}.children, ${newComponent.childCode}])";
+  } else if (existingComponent.child is Stack) {
     return Component(
       isLayout: true,
+      type: 'layout',
+      styleModel: existingComponent.styleModel,
       child: Stack(
-        children: [...existingComponent.children, newComponent.child],
+        children: [...(existingComponent.child as Stack).children, newComponent.child!],
       ),
-    );
+    )
+      ..childCode = "Stack(children: [...${existingComponent.childCode}.children, ${newComponent.childCode}])";
   }
-  return Component(child: existingComponent);
+  return existingComponent;
 }
-

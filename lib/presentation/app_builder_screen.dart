@@ -79,7 +79,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(String type) {
     setState(() {
-      final newComponent = createComponent(type, Colors.green, updateSelectedElement);
+      final newComponent = createComponent(type,updateSelectedElement);
       _draggableItems.add(newComponent);
     });
   }
@@ -116,7 +116,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             onTapElement: updateSelectedElement,
             resetSelection: resetSelection,
             addElement: addElement,
-            elementColor: elementColor,
           ),
           RightSideMenu(elements: elements),
         ],
