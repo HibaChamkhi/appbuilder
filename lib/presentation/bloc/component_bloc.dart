@@ -10,9 +10,15 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
     on<SelectElementEvent>((event, emit) {
       emit(state.copyWith(selectedElement: event.selectedElement));
     });
-
     on<DeselectElementEvent>((event, emit) {
       emit(state.copyWith(selectedElement: null));
+    });
+
+    on<AddDraggableItemEvent>((event, emit) {
+      final updatedDraggableItems = List<SelectedElement>.from(state.draggableItems ?? [])
+        ..add(event.selectedElement);
+
+      emit(state.copyWith(draggableItems: updatedDraggableItems));
     });
   }
 }
