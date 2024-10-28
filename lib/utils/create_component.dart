@@ -25,7 +25,6 @@ SelectedElement createComponent(SelectedElement selectedElement) {
 
 SelectedElement updateComponent(SelectedElement selectedElement, {Widget? newWidget}) {
   Widget updatedWidget = newWidget ?? selectedElement.widget;
-
   return SelectedElement(
     type: selectedElement.type,
     widget: updatedWidget,

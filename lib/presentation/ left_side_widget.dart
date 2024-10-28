@@ -13,8 +13,7 @@ class LeftSideMenu extends StatefulWidget {
   final TextEditingController widthController;
   final TextEditingController nameController;
   final Color selectedColor;
-  final bool showScreenParameters;
-  final SelectedElement? selectedElement;
+  final bool? selectedElement;
   final Function(Color) onColorChanged;
 
   const LeftSideMenu({
@@ -23,7 +22,6 @@ class LeftSideMenu extends StatefulWidget {
     required this.widthController,
     required this.nameController,
     required this.selectedColor,
-    required this.showScreenParameters,
     required this.selectedElement,
     required this.onColorChanged,
   });
@@ -44,7 +42,7 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (widget.selectedElement == null) ...[
+
               TextField(
                 controller: widget.nameController,
                 decoration: const InputDecoration(
@@ -74,15 +72,6 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
                 pickerColor: widget.selectedColor,
                 onColorChanged: widget.onColorChanged,
               ),
-            ] else ...[
-              Text("Selected Element Type: ${widget.selectedElement!.type}"),
-              ElevatedButton(
-                onPressed: () {
-                  print("Tapped on selected element parameter!");
-                },
-                child: const Text("Update Element"),
-              ),
-            ],
           ],
         ),
       ),
