@@ -18,6 +18,17 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       final updatedDraggableItems = List<SelectedElement>.from(state.draggableItems ?? [])
         ..add(event.selectedElement);
 
+      emit(state.copyWith(draggableItems: updatedDraggableItems, selectedElement: event.selectedElement));
+    });
+
+    on<EditDraggableItemEvent>((event, emit) {
+      final updatedDraggableItems = state.draggableItems?.map((element) {
+        if (element.id == event.selectedElement.id) {
+          return event.selectedElement;
+        }
+        return element;
+      }).toList();
+
       emit(state.copyWith(draggableItems: updatedDraggableItems));
     });
   }

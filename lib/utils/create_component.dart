@@ -11,9 +11,12 @@ Widget wrapWithGestureDetector(Widget widget, Function onTap) {
   );
 }
 
-SelectedElement createComponent(SelectedElement selectedElement, Function(SelectedElement) selectElement) {
+SelectedElement createComponent(
+    SelectedElement selectedElement, Function(SelectedElement)? selectElement) {
   Widget wrappedWidget = wrapWithGestureDetector(selectedElement.widget, () {
+    if (selectElement != null) {
     selectElement(selectedElement);
+    }
     print("Tapped on: ${selectedElement.widget}");
   });
 
@@ -24,7 +27,8 @@ SelectedElement createComponent(SelectedElement selectedElement, Function(Select
   );
 }
 
-SelectedElement updateComponent(SelectedElement selectedElement, {Widget? newWidget}) {
+SelectedElement updateComponent(SelectedElement selectedElement,
+    {Widget? newWidget}) {
   Widget updatedWidget = newWidget ?? selectedElement.widget;
 
   return SelectedElement(
@@ -37,7 +41,3 @@ SelectedElement updateComponent(SelectedElement selectedElement, {Widget? newWid
 Widget buildComponent(Widget component) {
   return component;
 }
-
-
-
-
