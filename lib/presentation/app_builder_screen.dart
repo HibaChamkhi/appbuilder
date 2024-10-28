@@ -19,7 +19,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   double selectedWidth = 393;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  bool? theSelectedElement;
   bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
@@ -93,7 +92,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             widthController: widthController,
             nameController: nameController,
             selectedColor: selectedColor,
-            selectedElement: theSelectedElement,
+            selectedElement: widget.state.selectedElement,
             onColorChanged: (color) {
               setState(() {
                 selectedColor = color;
@@ -110,7 +109,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             elementColor: elementColor,
             tapElement: (SelectedElement element) {
               setState(() {
-                print("theSelectedElement $theSelectedElement");
                 // selectedElement = element;
               });
             },

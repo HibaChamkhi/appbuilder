@@ -13,7 +13,7 @@ class LeftSideMenu extends StatefulWidget {
   final TextEditingController widthController;
   final TextEditingController nameController;
   final Color selectedColor;
-  final bool? selectedElement;
+  final SelectedElement? selectedElement;
   final Function(Color) onColorChanged;
 
   const LeftSideMenu({
