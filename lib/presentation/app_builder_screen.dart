@@ -68,8 +68,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
-      SelectedElement newElement = createComponent(selectedElement);
-      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(newElement));
+      // SelectedElement newElement = createComponent(selectedElement);
+      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(selectedElement));
     });
   }
 

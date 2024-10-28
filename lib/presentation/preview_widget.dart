@@ -47,15 +47,16 @@ class _PreviewWidgetState extends State<PreviewWidget> {
               children: [
                 DragTarget<SelectedElement>(
                   onAccept: (data) {
+                    print('data::: $data');
                     if (widget.draggableItems.isNotEmpty) {
                       var existingComponent = widget.draggableItems.last;
 
                       if (existingComponent.isLayout == true) {
                         setState(() {
-                          final newComponent = createComponent(data,);
+                          // final newComponent = createComponent(data,);
                           existingComponent = wrapWithParent(
                             existingComponent: existingComponent,
-                            newComponent: newComponent,
+                            newComponent: data,
                           );
                           widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
                         });
@@ -114,11 +115,11 @@ class _PreviewWidgetState extends State<PreviewWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData);
+                // final newComponent = createComponent(newData);
                 widget.draggableItems.removeLast();
-                widget.draggableItems.add(wrapWithRow(
+                widget.addElement(wrapWithRow(
                   firstComponent: existingComponent,
-                  secondComponent: newComponent,
+                  secondComponent: newData,
                 ));
                 Navigator.of(context).pop();
               },
@@ -126,11 +127,11 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData);
+                // final newComponent = createComponent(newData);
                 widget.draggableItems.removeLast();
-                widget.draggableItems.add(wrapWithColumn(
+                widget.addElement(wrapWithColumn(
                   firstComponent: existingComponent,
-                  secondComponent: newComponent,
+                  secondComponent: newData,
                 ));
                 Navigator.of(context).pop();
               },
@@ -138,11 +139,11 @@ class _PreviewWidgetState extends State<PreviewWidget> {
             ),
             TextButton(
               onPressed: () {
-                final newComponent = createComponent(newData,);
+                // final newComponent = createComponent(newData,);
                 widget.draggableItems.removeLast();
-                widget.draggableItems.add(wrapWithStack(
+                widget.addElement(wrapWithStack(
                   firstComponent: existingComponent,
-                  secondComponent: newComponent,
+                  secondComponent: newData,
                 ));
                 Navigator.of(context).pop();
               },
