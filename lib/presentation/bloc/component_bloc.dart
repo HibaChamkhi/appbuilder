@@ -9,9 +9,11 @@ part 'component_event.dart';
 
 class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
   ComponentBloc() : super( ComponentState()) {
+
     on<SelectElementEvent>((event, emit) {
-      emit(state.copyWith(selectedElement: event.selectedElement));
+      emit(state.copyWith(selectedElement: event.selectedElement,showScreenParameters: false));
     });
+
     on<DeselectElementEvent>((event, emit) {
       emit(state.copyWith(selectedElement: null));
     });
@@ -23,7 +25,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
       // If the element exists, replace it; if not, add as a new item
       final updatedDraggableItems = List<SelectedElement>.from(
-          state.draggableItems??[]);
+          state.draggableItems ?? []);
 
       final newElement = SelectedElement(
         id: event.selectedElement.id,
@@ -42,15 +44,24 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       }
       emit(state.copyWith(
         draggableItems: updatedDraggableItems,
-        // selectedElement: newElement,
+        selectedElement: newElement,
       ));
     });
 
 
+
     on<EditDraggableItemEvent>((event, emit) {
       final updatedDraggableItems = state.draggableItems?.map((element) {
-        if (element.id == event.selectedElement.id) {
-          return event.selectedElement;
+        if (element.id == event.selectedElementId) {
+          return SelectedElement(
+            id: event.selectedElementId,
+            type: element.type,
+            widget: wrapWithGestureDetector(event.selectedElementWidget, () {
+              print("Tapped on: ${element.id}");
+              add(SelectElementEvent(element));
+            }),
+            isLayout: element.isLayout,
+          );
         }
         return element;
       }).toList();
@@ -61,6 +72,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
     });
   }
 }
+
 Widget wrapWithGestureDetector(Widget widget, Function onTap) {
   return GestureDetector(
     onTap: () => onTap(),
