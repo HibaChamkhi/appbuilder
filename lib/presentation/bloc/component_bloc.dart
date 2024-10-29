@@ -8,10 +8,10 @@ part 'component_state.dart';
 part 'component_event.dart';
 
 class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
-  ComponentBloc() : super( ComponentState()) {
-
+  ComponentBloc() : super(ComponentState()) {
     on<SelectElementEvent>((event, emit) {
-      emit(state.copyWith(selectedElement: event.selectedElement,showScreenParameters: false));
+      emit(state.copyWith(
+          selectedElement: event.selectedElement, showScreenParameters: false));
     });
 
     on<DeselectElementEvent>((event, emit) {
@@ -20,18 +20,19 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
     on<AddDraggableItemEvent>((event, emit) {
       // Find if the element already exists in draggableItems by ID
-      final existingIndex = state.draggableItems?.indexWhere(
-              (element) => element.id == event.selectedElement.id);
+      final existingIndex = state.draggableItems
+          ?.indexWhere((element) => element.id == event.selectedElement.id);
 
       // If the element exists, replace it; if not, add as a new item
-      final updatedDraggableItems = List<SelectedElement>.from(
-          state.draggableItems ?? []);
-
+      final updatedDraggableItems =
+          List<SelectedElement>.from(state.draggableItems ?? []);
+      print('add draggable item: ${event.selectedElement.widget}');
       final newElement = SelectedElement(
         id: event.selectedElement.id,
         type: event.selectedElement.type,
         widget: wrapWithGestureDetector(event.selectedElement.widget, () {
           print("Tapped on: ${event.selectedElement.id}");
+          print("Tapped on: ${event.selectedElement.widget}");
           add(SelectElementEvent(event.selectedElement));
         }),
         isLayout: event.selectedElement.isLayout,
@@ -48,8 +49,6 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       ));
     });
 
-
-
     on<EditDraggableItemEvent>((event, emit) {
       final updatedDraggableItems = state.draggableItems?.map((element) {
         if (element.id == event.selectedElementId) {
@@ -65,10 +64,10 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
         }
         return element;
       }).toList();
-      print("updatedDraggableItems $updatedDraggableItems");
+      print("updatedDraggableItems ${event.selectedElementWidget}");
       emit(state.copyWith(draggableItems: updatedDraggableItems));
-      print('bloc:::: ${state.selectedElement?.id}');
-      print('bloc:::: ${state.selectedElement?.widget}');
+      // print('bloc:::: ${state.selectedElement?.id}');
+      // print('bloc:::: ${state.selectedElement?.widget}');
     });
   }
 }

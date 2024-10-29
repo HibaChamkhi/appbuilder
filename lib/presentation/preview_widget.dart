@@ -54,10 +54,10 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                       if (existingComponent.isLayout == true) {
                         setState(() {
                           // final newComponent = createComponent(data,);
-                          existingComponent = wrapWithParent(
-                            existingComponent: existingComponent,
-                            newComponent: data,
-                          );
+                          // existingComponent = wrapWithParent(
+                          //   existingComponent: existingComponent,
+                          //   newComponent: data,
+                          // );
                           widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
                         });
                       } else {

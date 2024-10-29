@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 class SelectedElement {
   late final String id; // Non-nullable
   final Type type;
-  late final Widget widget;
+  late Widget widget;
   final bool isLayout;
   Map<String, dynamic>? params;
 
@@ -63,22 +63,6 @@ class SelectedElement {
     }
     // Add more cases for other widgets
     return {};
-  }
-
-  void updateParams(Map<String, dynamic> newParams) {
-    if (type == Text) {
-      widget = Text(
-        newParams['text'] ?? '',
-        style: newParams['style'],
-      );
-    } else if (type == Icon) {
-      widget = Icon(
-        newParams['icon'] ?? Icons.star,
-        color: newParams['color'],
-        size: newParams['size'],
-      );
-    }
-    // Add more cases for other widgets
   }
 }
 

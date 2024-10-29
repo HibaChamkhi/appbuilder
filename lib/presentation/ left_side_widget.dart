@@ -6,16 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../utils/create_component.dart';
 
-
-// LeftSideMenu Code
 class LeftSideMenu extends StatefulWidget {
   final TextEditingController heightController;
   final TextEditingController widthController;
   final TextEditingController nameController;
   final Color selectedColor;
   final SelectedElement? selectedElement;
+  final Map<String, dynamic> params;
+  final Function(Map<String, dynamic>) onParamsUpdated;
   final Function(Color) onColorChanged;
-  final bool showScreenParameters ;
+  final bool showScreenParameters;
+
   const LeftSideMenu({
     super.key,
     required this.heightController,
@@ -23,6 +24,8 @@ class LeftSideMenu extends StatefulWidget {
     required this.nameController,
     required this.selectedColor,
     required this.selectedElement,
+    required this.params,
+    required this.onParamsUpdated,
     required this.onColorChanged,
     required this.showScreenParameters,
   });
@@ -32,18 +35,18 @@ class LeftSideMenu extends StatefulWidget {
 }
 
 class _LeftSideMenuState extends State<LeftSideMenu> {
-  Map<String, dynamic> extractedParams = {};
+  Map<String, dynamic> localParams = {};
 
   @override
   void initState() {
     super.initState();
-    if (widget.selectedElement != null) {
-      extractedParams = widget.selectedElement!.extractParams();
-    }
+    localParams = widget.params; // Initialize with passed params
   }
 
   @override
   Widget build(BuildContext context) {
+    print('pramas:: $localParams');
+    
     return Drawer(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
@@ -75,17 +78,19 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
           onColorChanged: (color) {
             widget.onColorChanged(color);
             setState(() {
-              extractedParams['color'] = color;
+              localParams['color'] = color;
             });
+            widget.onParamsUpdated(localParams); // Update params in parent
           },
         ),
         const Text('Text:'),
         TextField(
-          controller: TextEditingController(text: extractedParams['text']),
+          controller: TextEditingController(text: localParams['text']),
           onChanged: (value) {
             setState(() {
-              extractedParams['text'] = value;
+              localParams['text'] = value;
             });
+            widget.onParamsUpdated(localParams); // Update params in parent
           },
           decoration: const InputDecoration(
             labelText: 'Enter text',
@@ -102,30 +107,27 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
           onColorChanged: (color) {
             widget.onColorChanged(color);
             setState(() {
-              extractedParams['color'] = color;
+              localParams['color'] = color;
             });
+            widget.onParamsUpdated(localParams); // Update params in parent
           },
         ),
         const SizedBox(height: 20),
         const Text('Icon Size:'),
         Slider(
-          value: extractedParams['size'] ?? 24.0,
+          value: localParams['size'] ?? 24.0,
           min: 10.0,
           max: 100.0,
           onChanged: (value) {
             setState(() {
-              extractedParams['size'] = value;
+              localParams['size'] = value;
             });
+            widget.onParamsUpdated(localParams); // Update params in parent
           },
         ),
       ]);
     }
 
     return fields;
-  }
-
-  // Save the updated params to the selected element
-  void saveUpdatedParams() {
-    widget.selectedElement?.updateParams(extractedParams);
   }
 }
