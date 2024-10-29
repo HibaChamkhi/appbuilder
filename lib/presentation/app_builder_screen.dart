@@ -2,14 +2,15 @@ import 'package:app_builder/presentation/bloc/component_bloc.dart';
 import 'package:app_builder/presentation/preview_widget.dart';
 import 'package:app_builder/presentation/right_side_widget.dart';
 import 'package:app_builder/presentation/type_model.dart';
-import 'package:app_builder/utils/create_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import ' left_side_widget.dart';
 
 class AppBuilderScreen extends StatefulWidget {
   const AppBuilderScreen({super.key, required this.state});
-  final ComponentState state ;
+
+  final ComponentState state;
+
   @override
   _AppBuilderScreenState createState() => _AppBuilderScreenState();
 }
@@ -19,7 +20,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   double selectedWidth = 393;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  bool showScreenParameters = true;
 
   final TextEditingController heightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
@@ -62,30 +62,33 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void resetSelection() {
     setState(() {
-      showScreenParameters = true;
+      widget.state.showScreenParameters = true;
+      print( widget.state.showScreenParameters);
     });
   }
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
       // SelectedElement newElement = createComponent(selectedElement);
-      BlocProvider.of<ComponentBloc>(context).add( AddDraggableItemEvent(selectedElement));
+      BlocProvider.of<ComponentBloc>(context)
+          .add(AddDraggableItemEvent(selectedElement));
     });
   }
 
-  void updateSelectedElement(SelectedElement updatedElement) {
-    setState(() {
-      final index = widget.state.draggableItems
-          ?.indexWhere((element) => element.id == updatedElement.id);
-      if (index != -1) {
-        widget.state.draggableItems?[index!] = updatedElement;
-      }
-    });
-  }
+  // void updateSelectedElement(SelectedElement updatedElement) {
+  //   setState(() {
+  //     final index = widget.state.draggableItems
+  //         ?.indexWhere((element) => element.id == updatedElement.id);
+  //     if (index != -1) {
+  //       widget.state.draggableItems?[index!] = updatedElement;
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.withOpacity(0.9),
       body: Row(
         children: [
           LeftSideMenu(
@@ -93,10 +96,19 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             widthController: widthController,
             nameController: nameController,
             selectedColor: selectedColor,
+            showScreenParameters:widget.state.showScreenParameters,
             selectedElement: widget.state.selectedElement,
             onColorChanged: (color) {
               setState(() {
                 selectedColor = color;
+                BlocProvider.of<ComponentBloc>(context)
+                    .add(EditDraggableItemEvent(SelectedElement(
+                        id: "2986ef7d-47c2-42e5-9c85-2e67fb504c83",
+                        type: Text,
+                        widget: Text(
+                          "ghdfhfghg",
+                          style: TextStyle(color: color),
+                        ))));
               });
             },
           ),
@@ -104,16 +116,16 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             selectedHeight: selectedHeight,
             selectedWidth: selectedWidth,
             selectedColor: selectedColor,
-            draggableItems: widget.state.draggableItems ?? [],
+            draggableItems: widget.state.draggableItems,
             resetSelection: resetSelection,
             addElement: addElement,
             elementColor: elementColor,
             tapElement: (SelectedElement element) {
               setState(() {
                 print("state ${widget.state.selectedElement}");
-                BlocProvider.of<ComponentBloc>(context).add( SelectElementEvent(element));
+                BlocProvider.of<ComponentBloc>(context)
+                    .add(SelectElementEvent(element));
                 print("state2 ${widget.state.selectedElement}");
-
               });
             },
           ),

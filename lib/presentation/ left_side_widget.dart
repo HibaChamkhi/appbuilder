@@ -15,7 +15,7 @@ class LeftSideMenu extends StatefulWidget {
   final Color selectedColor;
   final SelectedElement? selectedElement;
   final Function(Color) onColorChanged;
-
+  final bool showScreenParameters ;
   const LeftSideMenu({
     super.key,
     required this.heightController,
@@ -24,6 +24,7 @@ class LeftSideMenu extends StatefulWidget {
     required this.selectedColor,
     required this.selectedElement,
     required this.onColorChanged,
+    required this.showScreenParameters,
   });
 
   @override
@@ -40,17 +41,9 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
       backgroundColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child:Column(
           children: [
-
-              TextField(
-                controller: widget.nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Interface Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
+            if ( widget.showScreenParameters == true) ...[
               TextField(
                 controller: widget.heightController,
                 decoration: const InputDecoration(
@@ -72,8 +65,16 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
                 pickerColor: widget.selectedColor,
                 onColorChanged: widget.onColorChanged,
               ),
+            ]else...[
+              Text(widget.selectedElement!.type.toString()),
+              BlockPicker(
+                pickerColor: widget.selectedColor,
+                onColorChanged: widget.onColorChanged,
+              ),
+            ]
           ],
-        ),
+        )
+
       ),
     );
   }

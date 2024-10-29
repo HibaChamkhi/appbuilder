@@ -2,17 +2,24 @@ part of 'component_bloc.dart';
 
 class ComponentState extends Equatable {
   final SelectedElement? selectedElement;
-  final List<SelectedElement>? draggableItems;
+  late  bool showScreenParameters;
+  final List<SelectedElement> draggableItems;
 
-  const ComponentState({this.selectedElement, this.draggableItems});
+   ComponentState({
+    this.selectedElement,
+    this.draggableItems = const [],
+    this.showScreenParameters = true,
+  });
 
   ComponentState copyWith({
     SelectedElement? selectedElement,
+    bool? showScreenParameters,
     List<SelectedElement>? draggableItems,
   }) {
     return ComponentState(
       selectedElement: selectedElement ?? this.selectedElement,
       draggableItems: draggableItems ?? [],
+      showScreenParameters: showScreenParameters ?? true,
     );
   }
 
@@ -20,5 +27,6 @@ class ComponentState extends Equatable {
   List<Object?> get props => [
         selectedElement,
         draggableItems,
+        showScreenParameters,
       ];
 }

@@ -24,8 +24,6 @@ class _RightSideMenuState extends State<RightSideMenu> {
       backgroundColor: Colors.grey,
       child: Column(
         children: [
-          const Text("Add UI Elements"),
-          const Divider(color: Colors.white),
           Expanded(
             child: ListView.builder(
               itemCount: widget.elements.length,
