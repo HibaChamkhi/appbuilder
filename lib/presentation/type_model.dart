@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 class SelectedElement {
   late final String id; // Non-nullable
   final Type type;
-  late Widget widget;
+  late final Widget widget;
   final bool isLayout;
   Map<String, dynamic>? params;
 
@@ -47,6 +47,9 @@ class SelectedElement {
     }
   }
 
+
+
+
   Map<String, dynamic> extractParams() {
     if (type == Text) {
       final textWidget = widget as Text;
@@ -64,6 +67,8 @@ class SelectedElement {
     // Add more cases for other widgets
     return {};
   }
+
+
 }
 
 

@@ -5,7 +5,6 @@ import 'package:app_builder/presentation/type_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import ' left_side_widget.dart';
-import '../utils/create_component.dart';
 
 class AppBuilderScreen extends StatefulWidget {
   const AppBuilderScreen({super.key, required this.state});
@@ -21,7 +20,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   double selectedWidth = 393;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  Map<String, dynamic> params = {};
 
   final TextEditingController heightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
@@ -36,13 +34,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
     // Add listeners to update the height and width when the user changes them
     heightController.addListener(_updateSelectedHeight);
     widthController.addListener(_updateSelectedWidth);
-
-    // Initialize the params (you could add default values here if needed)
-    params = {
-      'color': selectedColor,
-      'text': '', // Add default text if needed
-      // Add other params as required
-    };
   }
 
   @override
@@ -71,28 +62,39 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void resetSelection() {
     setState(() {
-      // Reset logic if needed
+      // widget.state.showScreenParameters = true;
+      // print( widget.state.showScreenParameters);
     });
   }
 
   void addElement(SelectedElement selectedElement) {
     setState(() {
+      // SelectedElement newElement = createComponent(selectedElement);
       BlocProvider.of<ComponentBloc>(context)
           .add(AddDraggableItemEvent(selectedElement));
     });
   }
 
-  // Method to update the selected element's params and trigger the event
-  void updateSelectedElement() {
-    final widgetFromParams = mapParamsToWidget(params);
-
+  void _updateSelectedElementParameter(Widget newWidget) {
     if (widget.state.selectedElement != null) {
-      BlocProvider.of<ComponentBloc>(context).add(EditDraggableItemEvent(
-        widget.state.selectedElement!.id,
-        widgetFromParams,
-      ));
+      setState(() {
+        BlocProvider.of<ComponentBloc>(context)
+            .add(EditDraggableItemEvent(
+            widget.state.selectedElement!.id,
+            newWidget
+        ));
+      });
+
+      // setState(() {
+      //   widget.state.selectedElement = selectedElement!.copyWith(
+      //     parameters: {parameter: value},
+      //   );
+      // });
+
+
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,20 +108,22 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             nameController: nameController,
             selectedColor: selectedColor,
             showScreenParameters: false,
+            onWidgetUpdated: _updateSelectedElementParameter,
             selectedElement: widget.state.selectedElement,
-            params: params, // Pass the params map
-            onParamsUpdated: (updatedParams) {
-              setState(() {
-                params = updatedParams; // Update the params map
-              });
-              updateSelectedElement(); // Trigger element update
-            },
             onColorChanged: (color) {
               setState(() {
+
                 selectedColor = color;
-                params['color'] = color; // Update the color in params
+                BlocProvider.of<ComponentBloc>(context)
+                    .add(EditDraggableItemEvent(
+                        widget.state.selectedElement!.id,
+                        Text(
+                          "ghdfhfghg",
+                          style: TextStyle(color: color),
+                        )));
+
+
               });
-              updateSelectedElement();
             },
           ),
           PreviewWidget(
@@ -136,4 +140,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
       ),
     );
   }
-}
+
+  }
+
+
