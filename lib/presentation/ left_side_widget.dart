@@ -7,7 +7,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../utils/create_component.dart';
 
 
-// LeftSideMenu Code
 class LeftSideMenu extends StatefulWidget {
   final TextEditingController heightController;
   final TextEditingController widthController;
@@ -15,7 +14,9 @@ class LeftSideMenu extends StatefulWidget {
   final Color selectedColor;
   final SelectedElement? selectedElement;
   final Function(Color) onColorChanged;
-  final bool showScreenParameters ;
+  final bool showScreenParameters;
+  final Function(Widget) onWidgetUpdated; // New callback
+
   const LeftSideMenu({
     super.key,
     required this.heightController,
@@ -25,11 +26,14 @@ class LeftSideMenu extends StatefulWidget {
     required this.selectedElement,
     required this.onColorChanged,
     required this.showScreenParameters,
+    required this.onWidgetUpdated, // Initialize in constructor
   });
 
   @override
   _LeftSideMenuState createState() => _LeftSideMenuState();
 }
+
+
 
 class _LeftSideMenuState extends State<LeftSideMenu> {
   Map<String, dynamic> extractedParams = {};
@@ -77,6 +81,8 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
             setState(() {
               extractedParams['color'] = color;
             });
+            // Generate updated widget with new color
+            widget.onWidgetUpdated(_createUpdatedWidget());
           },
         ),
         const Text('Text:'),
@@ -86,6 +92,8 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
             setState(() {
               extractedParams['text'] = value;
             });
+            // Generate updated widget with new text
+            widget.onWidgetUpdated(_createUpdatedWidget());
           },
           decoration: const InputDecoration(
             labelText: 'Enter text',
@@ -104,6 +112,8 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
             setState(() {
               extractedParams['color'] = color;
             });
+            // Generate updated widget with new color
+            widget.onWidgetUpdated(_createUpdatedWidget());
           },
         ),
         const SizedBox(height: 20),
@@ -116,6 +126,8 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
             setState(() {
               extractedParams['size'] = value;
             });
+            // Generate updated widget with new size
+            widget.onWidgetUpdated(_createUpdatedWidget());
           },
         ),
       ]);
@@ -123,9 +135,21 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
 
     return fields;
   }
-
-  // Save the updated params to the selected element
-  void saveUpdatedParams() {
-    widget.selectedElement?.updateParams(extractedParams);
+  Widget _createUpdatedWidget() {
+    if (widget.selectedElement!.type == Text) {
+      return Text(
+        extractedParams['text'] ?? '',
+        style: TextStyle(color: extractedParams['color']),
+      );
+    } else if (widget.selectedElement!.type == Icon) {
+      return Icon(
+        Icons.star, // Replace with your icon type
+        color: extractedParams['color'],
+        size: extractedParams['size'],
+      );
+    }
+    return Container(); // Default case
   }
+
+
 }
