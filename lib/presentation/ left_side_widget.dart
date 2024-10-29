@@ -69,6 +69,16 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
     if (selectedElement.type == Text) {
       fields.addAll([
         const SizedBox(height: 20),
+        const Text('Text Color:'),
+        BlockPicker(
+          pickerColor: widget.selectedColor,
+          onColorChanged: (color) {
+            widget.onColorChanged(color);
+            setState(() {
+              extractedParams['color'] = color;
+            });
+          },
+        ),
         const Text('Text:'),
         TextField(
           controller: TextEditingController(text: extractedParams['text']),
@@ -88,8 +98,9 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         const SizedBox(height: 20),
         const Text('Icon Color:'),
         BlockPicker(
-          pickerColor: extractedParams['color'] ?? Colors.black,
+          pickerColor: widget.selectedColor,
           onColorChanged: (color) {
+            widget.onColorChanged(color);
             setState(() {
               extractedParams['color'] = color;
             });
