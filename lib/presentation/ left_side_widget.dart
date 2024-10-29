@@ -32,7 +32,7 @@ class LeftSideMenu extends StatefulWidget {
 }
 
 class _LeftSideMenuState extends State<LeftSideMenu> {
-  late Map<String, dynamic> extractedParams;  // Holds current widget's params
+  Map<String, dynamic> extractedParams = {};
 
   @override
   void initState() {
@@ -53,30 +53,7 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (widget.showScreenParameters == true) ...[
-              // Display screen parameters (Height, Width, Color)
-              TextField(
-                controller: widget.heightController,
-                decoration: const InputDecoration(
-                  labelText: 'Height',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: widget.widthController,
-                decoration: const InputDecoration(
-                  labelText: 'Width',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text("Pick screen background color:"),
-              BlockPicker(
-                pickerColor: widget.selectedColor,
-                onColorChanged: widget.onColorChanged,
-              ),
-            ] else if (widget.selectedElement != null) ...[
+            if (widget.selectedElement != null) ...[
               // Dynamically generated fields for the selected element
               ..._buildDynamicFields(widget.selectedElement!),
             ],
@@ -134,5 +111,10 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
     }
 
     return fields;
+  }
+
+  // Save the updated params to the selected element
+  void saveUpdatedParams() {
+    widget.selectedElement?.updateParams(extractedParams);
   }
 }
