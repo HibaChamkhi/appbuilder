@@ -113,6 +113,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             onColorChanged: (color) {
               setState(() {
 
+                print('widget selectedElement:: ${widget.state.selectedElement?.id}');
                 selectedColor = color;
                 BlocProvider.of<ComponentBloc>(context)
                     .add(EditDraggableItemEvent(
@@ -121,7 +122,6 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
                           "ghdfhfghg",
                           style: TextStyle(color: color),
                         )));
-
 
               });
             },

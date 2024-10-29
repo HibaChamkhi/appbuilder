@@ -12,6 +12,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
     on<SelectElementEvent>((event, emit) {
       emit(state.copyWith(
           selectedElement: event.selectedElement, showScreenParameters: false));
+      print('state.selectedElement.id:: ${state.selectedElement?.id}');
     });
 
     on<DeselectElementEvent>((event, emit) {
@@ -51,12 +52,15 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
     on<EditDraggableItemEvent>((event, emit) {
       final updatedDraggableItems = state.draggableItems?.map((element) {
+        print('heeeere element.id ${element.id}');
+        print('heeeere event.selectedElementId ${event.selectedElementId}');
         if (element.id == event.selectedElementId) {
+          print('heeeere');
           return SelectedElement(
             id: event.selectedElementId,
             type: element.type,
             widget: wrapWithGestureDetector(event.selectedElementWidget, () {
-              print("Tapped on: ${element.id}");
+              print("Tapped on: ${element.widget}");
               add(SelectElementEvent(element));
             }),
             isLayout: element.isLayout,

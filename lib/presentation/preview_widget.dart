@@ -48,26 +48,27 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                 DragTarget<SelectedElement>(
                   onAccept: (data) {
                     print('data::: $data');
-                    if (widget.draggableItems.isNotEmpty) {
-                      var existingComponent = widget.draggableItems.last;
-
-                      if (existingComponent.isLayout == true) {
-                        setState(() {
-                          // final newComponent = createComponent(data,);
-                          // existingComponent = wrapWithParent(
-                          //   existingComponent: existingComponent,
-                          //   newComponent: data,
-                          // );
-                          widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
-                        });
-                      } else {
-                        _showLayoutDialog(existingComponent, data);
-                      }
-                    } else {
+                    // if (widget.draggableItems.isNotEmpty) {
+                    //   var existingComponent = widget.draggableItems.last;
+                    //
+                    //   if (existingComponent.isLayout == true) {
+                    //     setState(() {
+                    //       // final newComponent = createComponent(data,);
+                    //       // existingComponent = wrapWithParent(
+                    //       //   existingComponent: existingComponent,
+                    //       //   newComponent: data,
+                    //       // );
+                    //       widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
+                    //     });
+                    //   } else {
+                    //     _showLayoutDialog(existingComponent, data);
+                    //   }
+                    // }
+                    // else {
                       widget.addElement(data);
                       // print(" widget.tapElement ${widget.tapElement}");
-
-                    }
+print('data:::: ${data.id}');
+                    // }
                   },
                   builder: (context, candidateData, rejectedData) {
                     if (widget.draggableItems.isEmpty) {
@@ -86,7 +87,9 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                     return Stack(
                       children: widget.draggableItems.map((component) {
                         return Positioned(
-                          left: 20.0 * widget.draggableItems.indexOf(component),
+                          left: 20.0
+                              // * widget.draggableItems.indexOf(component)
+                          ,
                           top: 20.0 * widget.draggableItems.indexOf(component),
                           // child: GestureDetector(
                             // onTap: () => widget.tapElement(component),
