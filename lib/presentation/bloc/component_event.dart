@@ -28,10 +28,11 @@ class AddDraggableItemEvent extends ElementEvent {
 }
 
 class EditDraggableItemEvent extends ElementEvent {
-  final SelectedElement selectedElement;
+  final String selectedElementId;
+  final Widget selectedElementWidget;
 
-  const EditDraggableItemEvent(this.selectedElement);
+  const EditDraggableItemEvent(this.selectedElementId,this.selectedElementWidget);
 
   @override
-  List<Object?> get props => [selectedElement];
+  List<Object?> get props => [selectedElementId,selectedElementWidget];
 }

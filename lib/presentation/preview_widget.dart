@@ -10,7 +10,7 @@ class PreviewWidget extends StatefulWidget {
   final Color selectedColor;
   final List<SelectedElement> draggableItems;
   final Function() resetSelection;
-  final Function(SelectedElement) tapElement;
+  // final Function(SelectedElement) tapElement;
   final Function(SelectedElement) addElement;
   final Color elementColor;
 
@@ -20,7 +20,7 @@ class PreviewWidget extends StatefulWidget {
     required this.selectedWidth,
     required this.selectedColor,
     required this.draggableItems,
-    required this.tapElement,
+    // required this.tapElement,
     required this.resetSelection,
     required this.addElement,
     required this.elementColor,
@@ -36,13 +36,13 @@ class _PreviewWidgetState extends State<PreviewWidget> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          widget.resetSelection();
+          // widget.resetSelection();
         },
         child: Center(
           child: Container(
             height: widget.selectedHeight,
             width: widget.selectedWidth,
-            color: widget.selectedColor,
+            color: Colors.white,
             child: Stack(
               children: [
                 DragTarget<SelectedElement>(
@@ -65,7 +65,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                       }
                     } else {
                       widget.addElement(data);
-                      print(" widget.tapElement ${widget.tapElement}");
+                      // print(" widget.tapElement ${widget.tapElement}");
 
                     }
                   },
@@ -88,10 +88,10 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                         return Positioned(
                           left: 20.0 * widget.draggableItems.indexOf(component),
                           top: 20.0 * widget.draggableItems.indexOf(component),
-                          child: GestureDetector(
-                            onTap: () => widget.tapElement(component),
+                          // child: GestureDetector(
+                            // onTap: () => widget.tapElement(component),
                             child: buildComponent(component.widget),
-                          ),
+                          // ),
                         );
                       }).toList(),
                     );

@@ -62,8 +62,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void resetSelection() {
     setState(() {
-      widget.state.showScreenParameters = true;
-      print( widget.state.showScreenParameters);
+      // widget.state.showScreenParameters = true;
+      // print( widget.state.showScreenParameters);
     });
   }
 
@@ -96,19 +96,18 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             widthController: widthController,
             nameController: nameController,
             selectedColor: selectedColor,
-            showScreenParameters:widget.state.showScreenParameters,
+            showScreenParameters: false,
             selectedElement: widget.state.selectedElement,
             onColorChanged: (color) {
               setState(() {
                 selectedColor = color;
                 BlocProvider.of<ComponentBloc>(context)
-                    .add(EditDraggableItemEvent(SelectedElement(
-                        id: "2986ef7d-47c2-42e5-9c85-2e67fb504c83",
-                        type: Text,
-                        widget: Text(
+                    .add(EditDraggableItemEvent(
+                        widget.state.selectedElement!.id,
+                        Text(
                           "ghdfhfghg",
                           style: TextStyle(color: color),
-                        ))));
+                        )));
               });
             },
           ),
@@ -116,18 +115,18 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             selectedHeight: selectedHeight,
             selectedWidth: selectedWidth,
             selectedColor: selectedColor,
-            draggableItems: widget.state.draggableItems,
+            draggableItems: widget.state.draggableItems ?? [],
             resetSelection: resetSelection,
             addElement: addElement,
             elementColor: elementColor,
-            tapElement: (SelectedElement element) {
-              setState(() {
-                print("state ${widget.state.selectedElement}");
-                BlocProvider.of<ComponentBloc>(context)
-                    .add(SelectElementEvent(element));
-                print("state2 ${widget.state.selectedElement}");
-              });
-            },
+            // tapElement: (SelectedElement element) {
+            //   setState(() {
+            //     print("state ${widget.state.selectedElement}");
+            //     BlocProvider.of<ComponentBloc>(context)
+            //         .add(SelectElementEvent(element));
+            //     print("state2 ${widget.state.selectedElement}");
+            //   });
+            // },
           ),
           RightSideMenu(elements: typeToWidgetMap),
         ],

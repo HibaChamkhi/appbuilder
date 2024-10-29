@@ -43,7 +43,7 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         padding: const EdgeInsets.all(16.0),
         child:Column(
           children: [
-            if ( widget.showScreenParameters == true) ...[
+            // if ( widget.showScreenParameters == true) ...[
               TextField(
                 controller: widget.heightController,
                 decoration: const InputDecoration(
@@ -60,18 +60,18 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("Pick screen background color:"),
+              // const Text("Pick screen background color:"),
+              // BlockPicker(
+              //   pickerColor: widget.selectedColor,
+              //   onColorChanged: widget.onColorChanged,
+              // ),
+            // ]else...[
+            //   Text(widget.selectedElement!.type.toString()),
               BlockPicker(
                 pickerColor: widget.selectedColor,
                 onColorChanged: widget.onColorChanged,
               ),
-            ]else...[
-              Text(widget.selectedElement!.type.toString()),
-              BlockPicker(
-                pickerColor: widget.selectedColor,
-                onColorChanged: widget.onColorChanged,
-              ),
-            ]
+            // ]
           ],
         )
 
