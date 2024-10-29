@@ -23,15 +23,14 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
       // If the element exists, replace it; if not, add as a new item
       final updatedDraggableItems = List<SelectedElement>.from(
-          state.draggableItems);
+          state.draggableItems??[]);
 
       final newElement = SelectedElement(
         id: event.selectedElement.id,
         type: event.selectedElement.type,
         widget: wrapWithGestureDetector(event.selectedElement.widget, () {
           print("Tapped on: ${event.selectedElement.id}");
-
-          emit(state.copyWith(showScreenParameters: false));
+          add(SelectElementEvent(event.selectedElement));
         }),
         isLayout: event.selectedElement.isLayout,
       );
@@ -43,7 +42,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       }
       emit(state.copyWith(
         draggableItems: updatedDraggableItems,
-        selectedElement: newElement,
+        // selectedElement: newElement,
       ));
     });
 
@@ -60,33 +59,6 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       print('bloc:::: ${state.selectedElement?.id}');
       print('bloc:::: ${state.selectedElement?.widget}');
     });
-
-    // Utility functions
-    // Widget wrapWithGestureDetector(Widget widget, Function onTap) {
-    //   return GestureDetector(
-    //     onTap: () => onTap(),
-    //     child: widget,
-    //   );
-    // }
-
-    // SelectedElement createComponent(
-    //   SelectedElement selectedElement,
-    // ) {
-    //   Widget wrappedWidget =
-    //       wrapWithGestureDetector(selectedElement.widget, () {
-    //     // add(SelectElementEvent(selectedElement));
-    //     print("Tapped on: ${selectedElement.id}");
-    //   });
-    //
-    //   return SelectedElement(
-    //     type: selectedElement.type,
-    //     widget: wrapWithGestureDetector(selectedElement.widget, () {
-    //       // add(SelectElementEvent(selectedElement));
-    //       print("Tapped on: ${selectedElement.id}");
-    //     }),
-    //     isLayout: selectedElement.isLayout,
-    //   );
-    // }
   }
 }
 Widget wrapWithGestureDetector(Widget widget, Function onTap) {

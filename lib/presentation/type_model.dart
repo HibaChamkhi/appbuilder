@@ -46,6 +46,40 @@ class SelectedElement {
         throw Exception('Unknown type: $typeString');
     }
   }
+
+  Map<String, dynamic> extractParams() {
+    if (type == Text) {
+      final textWidget = widget as Text;
+      return {
+        'text': textWidget.data ?? '',
+        'style': textWidget.style,
+      };
+    } else if (type == Icon) {
+      final iconWidget = widget as Icon;
+      return {
+        'color': iconWidget.color,
+        'size': iconWidget.size,
+      };
+    }
+    // Add more cases for other widgets
+    return {};
+  }
+
+  void updateParams(Map<String, dynamic> newParams) {
+    if (type == Text) {
+      widget = Text(
+        newParams['text'] ?? '',
+        style: newParams['style'],
+      );
+    } else if (type == Icon) {
+      widget = Icon(
+        newParams['icon'] ?? Icons.star,
+        color: newParams['color'],
+        size: newParams['size'],
+      );
+    }
+    // Add more cases for other widgets
+  }
 }
 
 final typeToWidgetMap = {

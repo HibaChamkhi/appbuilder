@@ -116,7 +116,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             selectedHeight: selectedHeight,
             selectedWidth: selectedWidth,
             selectedColor: selectedColor,
-            draggableItems: widget.state.draggableItems,
+            draggableItems: widget.state.draggableItems??[],
             resetSelection: resetSelection,
             addElement: addElement,
             elementColor: elementColor,

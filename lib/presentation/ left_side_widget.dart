@@ -32,6 +32,16 @@ class LeftSideMenu extends StatefulWidget {
 }
 
 class _LeftSideMenuState extends State<LeftSideMenu> {
+  late Map<String, dynamic> extractedParams;  // Holds current widget's params
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.selectedElement != null) {
+      extractedParams = widget.selectedElement!.extractParams();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -41,9 +51,10 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
       backgroundColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:Column(
+        child: Column(
           children: [
-            if ( widget.showScreenParameters == true) ...[
+            if (widget.showScreenParameters == true) ...[
+              // Display screen parameters (Height, Width, Color)
               TextField(
                 controller: widget.heightController,
                 decoration: const InputDecoration(
@@ -65,17 +76,63 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
                 pickerColor: widget.selectedColor,
                 onColorChanged: widget.onColorChanged,
               ),
-            ]else...[
-              Text(widget.selectedElement!.type.toString()),
-              BlockPicker(
-                pickerColor: widget.selectedColor,
-                onColorChanged: widget.onColorChanged,
-              ),
-            ]
+            ] else if (widget.selectedElement != null) ...[
+              // Dynamically generated fields for the selected element
+              ..._buildDynamicFields(widget.selectedElement!),
+            ],
           ],
-        )
-
+        ),
       ),
     );
+  }
+
+  List<Widget> _buildDynamicFields(SelectedElement selectedElement) {
+    List<Widget> fields = [];
+
+    if (selectedElement.type == Text) {
+      fields.addAll([
+        const SizedBox(height: 20),
+        const Text('Text:'),
+        TextField(
+          controller: TextEditingController(text: extractedParams['text']),
+          onChanged: (value) {
+            setState(() {
+              extractedParams['text'] = value;
+            });
+          },
+          decoration: const InputDecoration(
+            labelText: 'Enter text',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ]);
+    } else if (selectedElement.type == Icon) {
+      fields.addAll([
+        const SizedBox(height: 20),
+        const Text('Icon Color:'),
+        BlockPicker(
+          pickerColor: extractedParams['color'] ?? Colors.black,
+          onColorChanged: (color) {
+            setState(() {
+              extractedParams['color'] = color;
+            });
+          },
+        ),
+        const SizedBox(height: 20),
+        const Text('Icon Size:'),
+        Slider(
+          value: extractedParams['size'] ?? 24.0,
+          min: 10.0,
+          max: 100.0,
+          onChanged: (value) {
+            setState(() {
+              extractedParams['size'] = value;
+            });
+          },
+        ),
+      ]);
+    }
+
+    return fields;
   }
 }
