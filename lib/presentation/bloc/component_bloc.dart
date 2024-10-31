@@ -13,6 +13,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       emit(state.copyWith(
           selectedElement: event.selectedElement, showScreenParameters: false));
       print('state.selectedElement.id:: ${state.selectedElement?.id}');
+
     });
 
     on<DeselectElementEvent>((event, emit) {
@@ -26,14 +27,15 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
       // If the element exists, replace it; if not, add as a new item
       final updatedDraggableItems =
-          List<SelectedElement>.from(state.draggableItems ?? []);
+      List<SelectedElement>.from(state.draggableItems ?? []);
       print('add draggable item: ${event.selectedElement.widget}');
       final newElement = SelectedElement(
         id: event.selectedElement.id,
         type: event.selectedElement.type,
         widget: wrapWithGestureDetector(event.selectedElement.widget, () {
-          print("Tapped on: ${event.selectedElement.id}");
-          print("Tapped on: ${event.selectedElement.widget}");
+          print("Tapped id on: ${event.selectedElement.id}");
+          print("Tapped widget on: ${event.selectedElement.widget}");
+          print("Tapped List on: ${state.draggableItems}");
           add(SelectElementEvent(event.selectedElement));
         }),
         isLayout: event.selectedElement.isLayout,

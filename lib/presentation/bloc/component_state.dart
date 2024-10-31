@@ -8,7 +8,7 @@ class ComponentState extends Equatable {
    ComponentState({
     this.selectedElement,
     this.draggableItems ,
-    this.showScreenParameters ,
+    this.showScreenParameters = false,
   });
 
   ComponentState copyWith({

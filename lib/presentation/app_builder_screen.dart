@@ -62,7 +62,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
 
   void resetSelection() {
     setState(() {
-      // widget.state.showScreenParameters = true;
+      widget.state.showScreenParameters = true;
       // print( widget.state.showScreenParameters);
     });
   }
@@ -107,22 +107,12 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
             widthController: widthController,
             nameController: nameController,
             selectedColor: selectedColor,
-            showScreenParameters: false,
+            showScreenParameters: widget.state.showScreenParameters ?? false,
             onWidgetUpdated: _updateSelectedElementParameter,
             selectedElement: widget.state.selectedElement,
             onColorChanged: (color) {
               setState(() {
-
-                print('widget selectedElement:: ${widget.state.selectedElement?.id}');
                 selectedColor = color;
-                BlocProvider.of<ComponentBloc>(context)
-                    .add(EditDraggableItemEvent(
-                        widget.state.selectedElement!.id,
-                        Text(
-                          "ghdfhfghg",
-                          style: TextStyle(color: color),
-                        )));
-
               });
             },
           ),
@@ -142,5 +132,8 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   }
 
   }
+
+
+
 
 

@@ -1,5 +1,4 @@
 import 'package:app_builder/presentation/type_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RightSideMenu extends StatefulWidget {

@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:app_builder/presentation/type_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import '../utils/create_component.dart';
 
 
 class LeftSideMenu extends StatefulWidget {
@@ -57,7 +54,30 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (widget.selectedElement != null) ...[
+            if (widget.showScreenParameters) ...[
+              TextField(
+                controller: widget.heightController,
+                decoration: const InputDecoration(
+                  labelText: 'Height',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: widget.widthController,
+                decoration: const InputDecoration(
+                  labelText: 'Width',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text("Pick screen background color:"),
+              BlockPicker(
+                pickerColor: widget.selectedColor,
+                onColorChanged: widget.onColorChanged,
+              ),
+            ]
+           else if (widget.selectedElement != null) ...[
               // Dynamically generated fields for the selected element
               ..._buildDynamicFields(widget.selectedElement!),
             ],
@@ -87,7 +107,7 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
         ),
         const Text('Text:'),
         TextField(
-          controller: TextEditingController(text: extractedParams['text']),
+          controller: widget.nameController, // Use the existing controller
           onChanged: (value) {
             setState(() {
               extractedParams['text'] = value;
@@ -100,6 +120,7 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
             border: OutlineInputBorder(),
           ),
         ),
+
       ]);
     } else if (selectedElement.type == Icon) {
       fields.addAll([
@@ -135,10 +156,12 @@ class _LeftSideMenuState extends State<LeftSideMenu> {
 
     return fields;
   }
+
+
   Widget _createUpdatedWidget() {
     if (widget.selectedElement!.type == Text) {
       return Text(
-        extractedParams['text'] ?? '',
+        extractedParams['text'] ?? '', // Ensure there's always a string
         style: TextStyle(color: extractedParams['color']),
       );
     } else if (widget.selectedElement!.type == Icon) {

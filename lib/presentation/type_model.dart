@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 class SelectedElement {
   late final String id; // Non-nullable
   final Type type;
-  late final Widget widget;
+  late  Widget widget;
   final bool isLayout;
   Map<String, dynamic>? params;
 
@@ -12,6 +12,7 @@ class SelectedElement {
   SelectedElement({
     required this.type,
     required this.widget,
+    this.params,
     this.isLayout = false,
     String? id, // Add id as an optional named parameter
   }) : id = id ?? Uuid().v4(); // Use the provided id or generate a new one
@@ -54,7 +55,7 @@ class SelectedElement {
     if (type == Text) {
       final textWidget = widget as Text;
       return {
-        'text': textWidget.data ?? '',
+        'text': textWidget.data ,
         'style': textWidget.style,
       };
     } else if (type == Icon) {
@@ -74,7 +75,7 @@ class SelectedElement {
 
 final typeToWidgetMap = {
   Text: const Text(
-    "This is a text",
+    "Hello world",
     style: TextStyle(fontSize: 20, color: Colors.red,),
   ),
   Icon: const Icon(

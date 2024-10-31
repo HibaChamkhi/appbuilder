@@ -10,6 +10,7 @@ class PreviewWidget extends StatefulWidget {
   final Color selectedColor;
   final List<SelectedElement> draggableItems;
   final Function() resetSelection;
+
   // final Function(SelectedElement) tapElement;
   final Function(SelectedElement) addElement;
   final Color elementColor;
@@ -36,49 +37,46 @@ class _PreviewWidgetState extends State<PreviewWidget> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          // widget.resetSelection();
+          widget.resetSelection();
         },
         child: Center(
           child: Container(
             height: widget.selectedHeight,
             width: widget.selectedWidth,
-            color: Colors.white,
+            color: widget.selectedColor,
             child: Stack(
               children: [
                 DragTarget<SelectedElement>(
                   onAccept: (data) {
                     print('data::: $data');
-                    // if (widget.draggableItems.isNotEmpty) {
-                    //   var existingComponent = widget.draggableItems.last;
-                    //
-                    //   if (existingComponent.isLayout == true) {
-                    //     setState(() {
-                    //       // final newComponent = createComponent(data,);
-                    //       // existingComponent = wrapWithParent(
-                    //       //   existingComponent: existingComponent,
-                    //       //   newComponent: data,
-                    //       // );
-                    //       widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
-                    //     });
-                    //   } else {
-                    //     _showLayoutDialog(existingComponent, data);
-                    //   }
-                    // }
-                    // else {
+                    if (widget.draggableItems.isNotEmpty) {
+                      var existingComponent = widget.draggableItems.last;
+
+                      if (existingComponent.isLayout == true) {
+                        print("object ${widget.draggableItems.length}");
+                        setState(() {
+                          widget.addElement(data);
+                          widget.draggableItems[widget.draggableItems.length - 1] = existingComponent;
+                        });
+                      } else {
+                        _showLayoutDialog(existingComponent, data);
+                      }
+                    }
+                    else {
                       widget.addElement(data);
-                      // print(" widget.tapElement ${widget.tapElement}");
-print('data:::: ${data.id}');
-                    // }
+                    }
                   },
                   builder: (context, candidateData, rejectedData) {
                     if (widget.draggableItems.isEmpty) {
                       return const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add_box_outlined, color: Colors.white, size: 40),
-                          Text("Empty Screen", style: TextStyle(color: Colors.white)),
+                          Icon(Icons.add_box_outlined,
+                              color: Colors.white, size: 40),
+                          Text("Empty Screen",
+                              style: TextStyle(color: Colors.white)),
                           Text(
-                            "Drag a layout element from the left to get started" ,
+                            "Drag a layout element from the left to get started",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
@@ -88,12 +86,12 @@ print('data:::: ${data.id}');
                       children: widget.draggableItems.map((component) {
                         return Positioned(
                           left: 20.0
-                              // * widget.draggableItems.indexOf(component)
+                          // * widget.draggableItems.indexOf(component)
                           ,
                           top: 20.0 * widget.draggableItems.indexOf(component),
                           // child: GestureDetector(
-                            // onTap: () => widget.tapElement(component),
-                            child: buildComponent(component.widget),
+                          // onTap: () => widget.tapElement(component),
+                          child: component.widget,
                           // ),
                         );
                       }).toList(),
@@ -108,10 +106,11 @@ print('data:::: ${data.id}');
     );
   }
 
-  void _showLayoutDialog(SelectedElement existingComponent, SelectedElement newData) {
+  void _showLayoutDialog(
+      SelectedElement existingComponent, SelectedElement newData) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (contextt) {
         return AlertDialog(
           title: const Text('Choose Layout'),
           content: const Text('How would you like to arrange the elements?'),
@@ -122,36 +121,36 @@ print('data:::: ${data.id}');
                 widget.draggableItems.removeLast();
                 widget.addElement(wrapWithRow(
                   firstComponent: existingComponent,
-                  secondComponent: newData,
+                  secondComponent: newData, context: context,
                 ));
                 Navigator.of(context).pop();
               },
               child: const Text('Row'),
             ),
-            TextButton(
-              onPressed: () {
-                // final newComponent = createComponent(newData);
-                widget.draggableItems.removeLast();
-                widget.addElement(wrapWithColumn(
-                  firstComponent: existingComponent,
-                  secondComponent: newData,
-                ));
-                Navigator.of(context).pop();
-              },
-              child: const Text('Column'),
-            ),
-            TextButton(
-              onPressed: () {
-                // final newComponent = createComponent(newData,);
-                widget.draggableItems.removeLast();
-                widget.addElement(wrapWithStack(
-                  firstComponent: existingComponent,
-                  secondComponent: newData,
-                ));
-                Navigator.of(context).pop();
-              },
-              child: const Text('Stack'),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     // final newComponent = createComponent(newData);
+            //     widget.draggableItems.removeLast();
+            //     widget.addElement(wrapWithColumn(
+            //       firstComponent: existingComponent,
+            //       secondComponent: newData,
+            //     ));
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: const Text('Column'),
+            // ),
+            // TextButton(
+            //   onPressed: () {
+            //     // final newComponent = createComponent(newData,);
+            //     widget.draggableItems.removeLast();
+            //     widget.addElement(wrapWithStack(
+            //       firstComponent: existingComponent,
+            //       secondComponent: newData,
+            //     ));
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: const Text('Stack'),
+            // ),
           ],
         );
       },
