@@ -19,31 +19,40 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       emit(state.copyWith(selectedElement: null));
     });
 
-    on<AddDraggableItemEvent>((event, emit) {
-      // Find if the element already exists in draggableItems by ID
-      final existingIndex = state.draggableItems
-          ?.indexWhere((element) => element.id == event.selectedElement.id);
-
-      // If the element exists, replace it; if not, add as a new item
+    on<AddDraggableItemEvent>((event, emit) async {
       final updatedDraggableItems =
-          List<SelectedElement>.from(state.draggableItems ?? []);
-      print('add draggable item: ${event.selectedElement.widget}');
+      List<SelectedElement>.from(state.draggableItems ?? []);
+
+      // Wrap the new element in a GestureDetector
       final newElement = SelectedElement(
         id: event.selectedElement.id,
         type: event.selectedElement.type,
         widget: wrapWithGestureDetector(event.selectedElement.widget, () {
-          print("Tapped on: ${event.selectedElement.id}");
-          print("Tapped on: ${event.selectedElement.widget}");
           add(SelectElementEvent(event.selectedElement));
         }),
         isLayout: event.selectedElement.isLayout,
+        layoutParent: event.selectedElement.layoutParent, // Optional layoutParent
       );
 
-      if (existingIndex != null && existingIndex >= 0) {
-        updatedDraggableItems[existingIndex] = newElement;
-      } else {
-        updatedDraggableItems.add(newElement);
+      if (updatedDraggableItems.isNotEmpty) {
+        final lastElement = updatedDraggableItems.last;
+
+        // If last element has no layoutParent, show layout selection
+        if (lastElement.layoutParent == null) {
+          // Wait for layout selection callback from the UI
+          final selectedLayout = await Future.value(); // Wait for the UI to return layout choice
+
+          lastElement.layoutParent = selectedLayout;
+          newElement.layoutParent = selectedLayout;
+
+          // Update the last element in the list
+          updatedDraggableItems[updatedDraggableItems.length - 1] = lastElement;
+        }
       }
+
+      // Add new element
+      updatedDraggableItems.add(newElement);
+
       emit(state.copyWith(
         draggableItems: updatedDraggableItems,
         selectedElement: newElement,
@@ -52,10 +61,7 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
 
     on<EditDraggableItemEvent>((event, emit) {
       final updatedDraggableItems = state.draggableItems?.map((element) {
-        print('heeeere element.id ${element.id}');
-        print('heeeere event.selectedElementId ${event.selectedElementId}');
         if (element.id == event.selectedElementId) {
-          print('heeeere');
           return SelectedElement(
             id: event.selectedElementId,
             type: element.type,
@@ -72,6 +78,28 @@ class ComponentBloc extends Bloc<ElementEvent, ComponentState> {
       emit(state.copyWith(draggableItems: updatedDraggableItems));
       // print('bloc:::: ${state.selectedElement?.id}');
       // print('bloc:::: ${state.selectedElement?.widget}');
+    });
+
+    on<SelectLayoutForElementEvent>((event, emit) {
+      final updatedDraggableItems = List<SelectedElement>.from(state.draggableItems ?? []);
+
+      if (updatedDraggableItems.isNotEmpty) {
+        // Apply the selected layout to both the last and current elements
+        final lastElement = updatedDraggableItems.last;
+
+        if (lastElement.layoutParent == null) {
+          lastElement.layoutParent = event.layout; // Apply layout to last element
+
+          if (state.selectedElement != null) {
+            state.selectedElement!.layoutParent = event.layout; // Apply layout to selected element
+          }
+
+          // Update the last element in the list
+          updatedDraggableItems[updatedDraggableItems.length - 1] = lastElement;
+
+          emit(state.copyWith(draggableItems: updatedDraggableItems));
+        }
+      }
     });
   }
 }

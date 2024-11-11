@@ -36,3 +36,11 @@ class EditDraggableItemEvent extends ElementEvent {
   @override
   List<Object?> get props => [selectedElementId,selectedElementWidget];
 }
+class SelectLayoutForElementEvent extends ElementEvent {
+  final Type layout;
+
+  const SelectLayoutForElementEvent(this.layout);
+
+  @override
+  List<Object?> get props => [layout];
+}

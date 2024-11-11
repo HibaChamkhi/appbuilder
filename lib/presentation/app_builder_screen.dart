@@ -126,16 +126,27 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
               });
             },
           ),
-          PreviewWidget(
-            selectedHeight: selectedHeight,
-            selectedWidth: selectedWidth,
-            selectedColor: selectedColor,
-            draggableItems: widget.state.draggableItems ?? [],
-            resetSelection: resetSelection,
-            addElement: addElement,
-            elementColor: elementColor,
-          ),
-          RightSideMenu(elements: typeToWidgetMap),
+        PreviewWidget(
+          selectedHeight: 400,
+          selectedWidth: 300,
+          selectedColor: Colors.blue,
+          draggableItems: widget.state.draggableItems ?? [],
+          resetSelection: () {
+            BlocProvider.of<ComponentBloc>(context)
+                .add(DeselectElementEvent());
+          },
+          addElement: (SelectedElement element) {
+            BlocProvider.of<ComponentBloc>(context)
+                .add(AddDraggableItemEvent(element));
+          },
+          onLayoutSelected: (Type layout) {
+            // Handle layout selection directly
+            BlocProvider.of<ComponentBloc>(context)
+                .add(SelectLayoutForElementEvent(layout));
+          },
+          elementColor: Colors.grey,
+        ),
+        RightSideMenu(elements: typeToWidgetMap),
         ],
       ),
     );

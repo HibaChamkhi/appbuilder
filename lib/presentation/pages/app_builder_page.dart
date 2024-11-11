@@ -25,7 +25,6 @@ class _AppBuilderPageState extends State<AppBuilderPage> {
   Widget _buildBody() {
     return BlocConsumer<ComponentBloc, ComponentState>(
         listener: (context, state) {
-          print('blocConsumer:: ${state.selectedElement?.id}');
         },
         builder: (context, state) {
           return AppBuilderScreen(state:state);

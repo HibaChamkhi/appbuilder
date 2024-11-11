@@ -7,12 +7,14 @@ class SelectedElement {
   late final Widget widget;
   final bool isLayout;
   Map<String, dynamic>? params;
+  Type? layoutParent; // New property to indicate layout relationship
 
 
   SelectedElement({
     required this.type,
     required this.widget,
     this.isLayout = false,
+    this.layoutParent, // Add layoutParent as an optional named parameter
     String? id, // Add id as an optional named parameter
   }) : id = id ?? Uuid().v4(); // Use the provided id or generate a new one
 
@@ -22,6 +24,7 @@ class SelectedElement {
       'id': id,
       'type': type.toString(), // Convert Type to String
       'isLayout': isLayout,
+      'layoutParent': layoutParent?.toString(), // Convert layoutParent to String
     };
   }
 
@@ -31,6 +34,7 @@ class SelectedElement {
       type: _typeFromString(json['type']),
       widget: json['widget'], // Handle widget conversion as necessary
       isLayout: json['isLayout'],
+      layoutParent: _typeFromString(json['layoutParent']), // Convert layoutParent
     )..id = json['id']; // Assign the id after construction
   }
 
@@ -41,8 +45,12 @@ class SelectedElement {
         return Text; // Return the appropriate Type
       case 'Icon':
         return Icon; // Return the appropriate Type
-    // Add more cases as needed
-      default:
+      case 'Column':
+        return Column;
+      case 'Row':
+        return Row;
+      case 'Stack':
+        return Stack;      default:
         throw Exception('Unknown type: $typeString');
     }
   }
