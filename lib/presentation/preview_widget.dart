@@ -46,12 +46,7 @@ class _PreviewWidgetState extends State<PreviewWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add_box_outlined, color: Colors.white, size: 40),
-                        Text("Empty Screen", style: TextStyle(color: Colors.white)),
-                        Text(
-                          "Drag a layout element from the right in order to get started",
-                          style: TextStyle(color: Colors.white),
-                        ),
+
                       ],
                     ),
                   );

@@ -15,12 +15,15 @@ class AppBuilderScreen extends StatefulWidget {
 }
 
 class _AppBuilderScreenState extends State<AppBuilderScreen> {
-  double selectedHeight = 852;
-  double selectedWidth = 393;
+  double selectedHeight = 652;
+  double selectedWidth = 300;
   Color selectedColor = Colors.black;
   Color elementColor = Colors.white;
-  List<String> elements = ["Text", "Icon", "Button"];
-  String? draggedElement;
+  final List<Map<String, dynamic>> elements = [
+    {'name': 'Text', 'icon': Icons.text_fields},
+    {'name': 'Icon', 'icon': Icons.insert_emoticon},
+    {'name': 'Button', 'icon': Icons.radio_button_checked},
+  ];  String? draggedElement;
   String? selectedElement;
   bool showScreenParameters = true;
 
@@ -87,6 +90,7 @@ class _AppBuilderScreenState extends State<AppBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:Color(0xffe5e1e7),
       body: Row(
         children: [
           LeftSideMenu(
